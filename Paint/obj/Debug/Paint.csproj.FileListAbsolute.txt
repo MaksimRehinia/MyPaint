@@ -1,0 +1,9 @@
+D:\Maksim\univer\4 sem\ООТПиСП\1+2\Paint\Paint\bin\Debug\Paint.exe.config
+D:\Maksim\univer\4 sem\ООТПиСП\1+2\Paint\Paint\bin\Debug\Paint.exe
+D:\Maksim\univer\4 sem\ООТПиСП\1+2\Paint\Paint\bin\Debug\Paint.pdb
+D:\Maksim\univer\4 sem\ООТПиСП\1+2\Paint\Paint\obj\Debug\Paint.csprojResolveAssemblyReference.cache
+D:\Maksim\univer\4 sem\ООТПиСП\1+2\Paint\Paint\obj\Debug\Paint.MainForm.resources
+D:\Maksim\univer\4 sem\ООТПиСП\1+2\Paint\Paint\obj\Debug\Paint.Properties.Resources.resources
+D:\Maksim\univer\4 sem\ООТПиСП\1+2\Paint\Paint\obj\Debug\Paint.csproj.GenerateResource.Cache
+D:\Maksim\univer\4 sem\ООТПиСП\1+2\Paint\Paint\obj\Debug\Paint.exe
+D:\Maksim\univer\4 sem\ООТПиСП\1+2\Paint\Paint\obj\Debug\Paint.pdb
