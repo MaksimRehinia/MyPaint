@@ -5,21 +5,21 @@ namespace Paint
 {
     class Poligons: ClassShape
     {
-        public Point[] points { get; set; }
-        public Poligons(Pen pen, int x, int y, params int[] coord) :base(pen, x, y)
+        public Point[] Points { get; set; }
+        public Poligons(Pen Pen, int X, int Y, params int[] coord) :base(Pen, X, Y)
         {
-            points = new Point[coord.Length / 2 + 1 + 1];
-            points[0] = new Point(x, y);
+            Points = new Point[coord.Length / 2 + 1 + 1];
+            Points[0] = new Point(X, Y);
             int k = 1;
             for (int i = 0; i < coord.Length; i += 2)
             {
-                points[k++] = new Point(coord[i], coord[i + 1]);
+                Points[k++] = new Point(coord[i], coord[i + 1]);
             }
-            points[k] = new Point(x, y);
+            Points[k] = new Point(X, Y);
         }
         public override void Draw(Graphics drawArea)
         {
-            drawArea.DrawLines(pen, points);
+            drawArea.DrawLines(Pen, Points);
         }
     }
 }

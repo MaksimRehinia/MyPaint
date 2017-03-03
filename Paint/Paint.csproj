@@ -47,7 +47,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClassShape.cs" />
-    <Compile Include="Curves.cs" />
     <Compile Include="Lines.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>

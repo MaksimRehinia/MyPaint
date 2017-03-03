@@ -30,6 +30,9 @@
         {
             this.button1 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.checkedListBox = new System.Windows.Forms.CheckedListBox();
+            this.button_Color = new System.Windows.Forms.Button();
+            this.colorDialog = new System.Windows.Forms.ColorDialog();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -47,11 +50,37 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(0, 48);
+            this.pictureBox1.Location = new System.Drawing.Point(127, 48);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(476, 243);
+            this.pictureBox1.Size = new System.Drawing.Size(349, 243);
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
+            // 
+            // checkedListBox
+            // 
+            this.checkedListBox.CheckOnClick = true;
+            this.checkedListBox.FormattingEnabled = true;
+            this.checkedListBox.Items.AddRange(new object[] {
+            "Line",
+            "Oval",
+            "Rectangle",
+            "Poligon",
+            "Triangle"});
+            this.checkedListBox.Location = new System.Drawing.Point(1, 96);
+            this.checkedListBox.Name = "checkedListBox";
+            this.checkedListBox.Size = new System.Drawing.Size(120, 94);
+            this.checkedListBox.TabIndex = 2;
+            this.checkedListBox.Click += new System.EventHandler(this.checkedListBox1_Click);
+            // 
+            // button_Color
+            // 
+            this.button_Color.Location = new System.Drawing.Point(12, 60);
+            this.button_Color.Name = "button_Color";
+            this.button_Color.Size = new System.Drawing.Size(98, 30);
+            this.button_Color.TabIndex = 3;
+            this.button_Color.Text = "Color";
+            this.button_Color.UseVisualStyleBackColor = true;
+            this.button_Color.Click += new System.EventHandler(this.button_Color_Click);
             // 
             // MainForm
             // 
@@ -59,6 +88,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(476, 291);
+            this.Controls.Add(this.button_Color);
+            this.Controls.Add(this.checkedListBox);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.button1);
             this.Name = "MainForm";
@@ -72,6 +103,9 @@
 
         private System.Windows.Forms.Button button1;
         public System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.CheckedListBox checkedListBox;
+        private System.Windows.Forms.Button button_Color;
+        private System.Windows.Forms.ColorDialog colorDialog;
     }
 }
 

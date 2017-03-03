@@ -5,16 +5,16 @@ namespace Paint
 {
     class Ovals: ClassShape
     {
-        public int length { get; set; }
-        public int height { get; set; }
-        public Ovals(Pen pen, int x, int y, int length, int height): base(pen, x, y)
+        public int Length { get; set; }
+        public int Height { get; set; }
+        public Ovals(Pen Pen, int X, int Y, int length, int height): base(Pen, X, Y)
         {
-            this.length = length;
-            this.height = height;
+            Length = length;
+            Height = height;
         }
         public override void Draw(Graphics drawArea)
         {
-            drawArea.DrawEllipse(pen, x, y, length, height);
+            drawArea.DrawEllipse(Pen, X, Y, Length, Height);
         }
     }
 }

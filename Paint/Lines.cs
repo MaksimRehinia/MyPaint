@@ -5,16 +5,16 @@ namespace Paint
 {
     class Lines: ClassShape
     {
-        public int x2 { get; set; }
-        public int y2 { get; set; }
-        public Lines(Pen pen, int x, int y, int x2, int y2): base(pen, x, y)
+        public int X2 { get; set; }
+        public int Y2 { get; set; }
+        public Lines(Pen Pen, int X, int Y, int x2, int y2): base(Pen, X, Y)
         {
-            this.x2 = x2;
-            this.y2 = y2;
+            X2 = x2;
+            Y2 = y2;
         }
         public override void Draw(Graphics drawArea)
         {
-            drawArea.DrawLine(pen, x, y, x2, y2);
+            drawArea.DrawLine(Pen, X, Y, X2, Y2);
         }
     }
 }
