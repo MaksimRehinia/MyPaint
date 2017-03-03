@@ -8,39 +8,41 @@ namespace Paint
     public partial class MainForm : Form
     {
         internal Graphics drawArea;//поле для рисования фигур
-        Color CurrentColor = Color.Black;
+        private IShape drawable = null;
+        private Pen pen = new Pen(Color.Black, 2);                
+        bool lKeyPressed, ShiftPressed = false;        
+        private Point initPoint, currPoint;
         enum Figure
         {
             None,
             Line,
             Rectangle,
-            Oval,
-            Triangle
+            Oval,            
         }
-        Figure SelectedFigure;
+        Figure SelectedShape = Figure.None;
         public MainForm()
         {
             InitializeComponent();            
         }
 
-        private Dictionary<string, ClassShape> CreateDictionary()
+        private void SetDrawable(Point pt1, Point pt2)
         {
-            var map = new Dictionary<string, ClassShape>(5);
-            map.Add("rect", new Rectangles(new Pen(Color.Green, 5), 50, 50, 50, 50 ) );
-            map.Add("oval", new Ovals(new Pen(Color.Red, 1), 110, 50, 60, 40) );
-            map.Add("line",new Lines(new Pen(Color.Blue, 3), 180, 50, 190, 100) );
-            map.Add("polig", new Poligons(new Pen(Color.Orange, 2), 200, 30, 210, 100, 230, 50) );            
-            return map;                  
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            var map = CreateDictionary();
-            drawArea = pictureBox1.CreateGraphics();
-            map["rect"].Draw(drawArea);
-            map["oval"].Draw(drawArea);
-            map["line"].Draw(drawArea);
-            map["polig"].Draw(drawArea);           
+            switch (SelectedShape)
+            {
+                case Figure.None:
+                    break;
+                case Figure.Line:
+                    drawable = new Lines(pt1, pt2);
+                    break;
+                case Figure.Oval:
+                    drawable = new Ovals(pt1, pt2);
+                    break;
+                case Figure.Rectangle:
+                    drawable = new Rectangles(pt1, pt2);
+                    break;                                   
+                default:
+                    break;
+            }
         }
 
         private void checkedListBox1_Click(object sender, EventArgs e)
@@ -53,24 +55,19 @@ namespace Paint
             {
                 case "Line":
                     {
-                        SelectedFigure = Figure.Line;
+                        SelectedShape = Figure.Line;
                         break;
                     }
                 case "Oval":
                     {
-                        SelectedFigure = Figure.Oval;
+                        SelectedShape = Figure.Oval;
                         break;
                     }
                 case "Rectangle":
                     {
-                        SelectedFigure = Figure.Rectangle;
+                        SelectedShape = Figure.Rectangle;
                         break;
-                    }
-                case "Triangle":
-                    {
-                        SelectedFigure = Figure.Triangle;
-                        break;
-                    }
+                    }               
             }            
         }
 
@@ -79,9 +76,63 @@ namespace Paint
             DialogResult D = colorDialog.ShowDialog();
             if (D == DialogResult.OK)
             {
-                CurrentColor = colorDialog.Color;                                
-                button_Color.ForeColor = CurrentColor;
+                pen.Color = button_Color.ForeColor = colorDialog.Color;                
             }
+        }        
+
+        private void pictureBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (SelectedShape != Figure.None)
+            {
+                initPoint = e.Location;                
+            }
+            lKeyPressed = true;
+        }
+
+        private void pictureBox_MouseUp(object sender, MouseEventArgs e)
+        {
+            Point currPoint = (e as MouseEventArgs).Location;
+            SetDrawable(initPoint, currPoint);
+            if (SelectedShape != Figure.None)
+            {
+                drawable.Draw(ref drawArea, ref pen, ShiftPressed);                
+            }
+            lKeyPressed = false;
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            drawArea = pictureBox.CreateGraphics();
+        }
+
+        private void buttonClean_Click(object sender, EventArgs e)
+        {
+            pictureBox.Refresh();
+        }
+
+        private void pictureBox_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (lKeyPressed)
+            {
+                if ((SelectedShape == Figure.Line) && (!ShiftPressed))
+                {
+                    currPoint = initPoint;
+                    initPoint = e.Location;
+                    drawable = new Lines(currPoint, initPoint);
+                    drawable.Draw(ref drawArea, ref pen, ShiftPressed);
+                }
+            }
+        }
+
+        private void MainForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Shift)            
+                ShiftPressed = true;             
+        }
+
+        private void MainForm_KeyUp(object sender, KeyEventArgs e)
+        {
+            ShiftPressed = false;
         }
     }
 }
