@@ -35,6 +35,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.buttonClean = new System.Windows.Forms.Button();
+            this.textBoxPenWidth = new System.Windows.Forms.TextBox();
+            this.labelPenWidth = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -59,7 +61,7 @@
             "Line",
             "Oval",
             "Rectangle"});
-            this.checkedListBox.Location = new System.Drawing.Point(1, 103);
+            this.checkedListBox.Location = new System.Drawing.Point(1, 134);
             this.checkedListBox.Name = "checkedListBox";
             this.checkedListBox.Size = new System.Drawing.Size(120, 79);
             this.checkedListBox.TabIndex = 2;
@@ -68,7 +70,7 @@
             // button_Color
             // 
             this.button_Color.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button_Color.Location = new System.Drawing.Point(12, 12);
+            this.button_Color.Location = new System.Drawing.Point(12, 61);
             this.button_Color.Name = "button_Color";
             this.button_Color.Size = new System.Drawing.Size(98, 30);
             this.button_Color.TabIndex = 3;
@@ -86,7 +88,7 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(1, 188);
+            this.textBox1.Location = new System.Drawing.Point(1, 219);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
@@ -98,7 +100,7 @@
             // buttonClean
             // 
             this.buttonClean.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.buttonClean.Location = new System.Drawing.Point(12, 48);
+            this.buttonClean.Location = new System.Drawing.Point(12, 97);
             this.buttonClean.Name = "buttonClean";
             this.buttonClean.Size = new System.Drawing.Size(98, 31);
             this.buttonClean.TabIndex = 6;
@@ -106,18 +108,39 @@
             this.buttonClean.UseVisualStyleBackColor = true;
             this.buttonClean.Click += new System.EventHandler(this.buttonClean_Click);
             // 
+            // textBoxPenWidth
+            // 
+            this.textBoxPenWidth.Location = new System.Drawing.Point(12, 35);
+            this.textBoxPenWidth.Name = "textBoxPenWidth";
+            this.textBoxPenWidth.Size = new System.Drawing.Size(100, 20);
+            this.textBoxPenWidth.TabIndex = 7;
+            this.textBoxPenWidth.Text = "2";
+            this.textBoxPenWidth.TextChanged += new System.EventHandler(this.textBoxPenWidth_TextChanged);
+            // 
+            // labelPenWidth
+            // 
+            this.labelPenWidth.AutoSize = true;
+            this.labelPenWidth.Location = new System.Drawing.Point(14, 19);
+            this.labelPenWidth.Name = "labelPenWidth";
+            this.labelPenWidth.Size = new System.Drawing.Size(96, 13);
+            this.labelPenWidth.TabIndex = 8;
+            this.labelPenWidth.Text = "Change pen width:";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(718, 291);
+            this.Controls.Add(this.labelPenWidth);
+            this.Controls.Add(this.textBoxPenWidth);
             this.Controls.Add(this.buttonClean);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button_Color);
             this.Controls.Add(this.checkedListBox);
             this.Controls.Add(this.pictureBox);
+            this.KeyPreview = true;
             this.Name = "MainForm";
             this.Text = "MyPaint";
             this.Load += new System.EventHandler(this.MainForm_Load);
@@ -138,6 +161,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button buttonClean;
+        private System.Windows.Forms.TextBox textBoxPenWidth;
+        private System.Windows.Forms.Label labelPenWidth;
     }
 }
 

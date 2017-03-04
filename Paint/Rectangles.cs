@@ -28,12 +28,24 @@ namespace Paint
         }        
         public void Draw(ref Graphics drawArea, ref Pen p, bool ShiftPressed)
         {
-            if ((FirstPoint.X > SecondPoint.X) && (FirstPoint.Y < SecondPoint.Y))
+            if ((FirstPoint.X > SecondPoint.X) && (FirstPoint.Y > SecondPoint.Y))
             {
                 Point temp = FirstPoint;
                 FirstPoint = SecondPoint;
                 SecondPoint = temp;
-            }  
+            }
+            if ((FirstPoint.X < SecondPoint.X) && (FirstPoint.Y > SecondPoint.Y))
+            {
+                int temp = FirstPoint.Y;
+                FirstPoint.Y = SecondPoint.Y;
+                SecondPoint.Y = temp;                
+            }
+            if ((FirstPoint.X > SecondPoint.X) && (FirstPoint.Y < SecondPoint.Y))
+            {
+                int temp = FirstPoint.X;
+                FirstPoint.X = SecondPoint.X;
+                SecondPoint.X = temp;
+            }
             if (ShiftPressed)           
                 drawArea.DrawRectangle(p, FirstPoint.X, FirstPoint.Y, Width, Width);            
             else            

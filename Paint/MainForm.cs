@@ -124,6 +124,11 @@ namespace Paint
             }
         }
 
+        private void textBoxPenWidth_TextChanged(object sender, EventArgs e)
+        {
+            pen.Width = int.Parse((sender as TextBox).Text);
+        }
+
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Shift)            
