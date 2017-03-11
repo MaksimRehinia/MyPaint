@@ -45,7 +45,7 @@
             this.pictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox.Location = new System.Drawing.Point(127, 12);
             this.pictureBox.Name = "pictureBox";
-            this.pictureBox.Size = new System.Drawing.Size(579, 267);
+            this.pictureBox.Size = new System.Drawing.Size(579, 337);
             this.pictureBox.TabIndex = 1;
             this.pictureBox.TabStop = false;
             this.pictureBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseDown);
@@ -131,7 +131,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(718, 291);
+            this.ClientSize = new System.Drawing.Size(718, 361);
             this.Controls.Add(this.labelPenWidth);
             this.Controls.Add(this.textBoxPenWidth);
             this.Controls.Add(this.buttonClean);
@@ -140,6 +140,7 @@
             this.Controls.Add(this.button_Color);
             this.Controls.Add(this.checkedListBox);
             this.Controls.Add(this.pictureBox);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.KeyPreview = true;
             this.Name = "MainForm";
             this.Text = "MyPaint";

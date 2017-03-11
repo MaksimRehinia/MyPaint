@@ -5,8 +5,8 @@ namespace Paint
 {
     class Rectangles: IShape
     {
-        private Point FirstPoint;  // верхняя левая вершина
-        private Point SecondPoint; // нижняя правая вершина
+        private Point FirstPoint;  
+        private Point SecondPoint; 
         public int Height
         {
             get
