@@ -30,13 +30,16 @@
         {           
             this.pictureBox = new System.Windows.Forms.PictureBox();
             this.checkedListBox = new System.Windows.Forms.CheckedListBox();
-            this.button_Color = new System.Windows.Forms.Button();
+            this.buttonColor = new System.Windows.Forms.Button();
             this.colorDialog = new System.Windows.Forms.ColorDialog();
-            this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBoxNote = new System.Windows.Forms.TextBox();
             this.buttonClean = new System.Windows.Forms.Button();
             this.textBoxPenWidth = new System.Windows.Forms.TextBox();
             this.labelPenWidth = new System.Windows.Forms.Label();
+            this.buttonSave = new System.Windows.Forms.Button();
+            this.buttonLoad = new System.Windows.Forms.Button();
+            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -61,48 +64,40 @@
             "Line",
             "Oval",
             "Rectangle"});
-            this.checkedListBox.Location = new System.Drawing.Point(1, 134);
+            this.checkedListBox.Location = new System.Drawing.Point(3, 51);
             this.checkedListBox.Name = "checkedListBox";
             this.checkedListBox.Size = new System.Drawing.Size(120, 79);
             this.checkedListBox.TabIndex = 2;
             this.checkedListBox.Click += new System.EventHandler(this.checkedListBox1_Click);
             // 
-            // button_Color
+            // buttonColor
             // 
-            this.button_Color.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.button_Color.Location = new System.Drawing.Point(12, 61);
-            this.button_Color.Name = "button_Color";
-            this.button_Color.Size = new System.Drawing.Size(98, 30);
-            this.button_Color.TabIndex = 3;
-            this.button_Color.Text = "Change color";
-            this.button_Color.UseVisualStyleBackColor = true;
-            this.button_Color.Click += new System.EventHandler(this.button_Color_Click);
+            this.buttonColor.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.buttonColor.Location = new System.Drawing.Point(10, 173);
+            this.buttonColor.Name = "buttonColor";
+            this.buttonColor.Size = new System.Drawing.Size(100, 31);
+            this.buttonColor.TabIndex = 3;
+            this.buttonColor.Text = "Change color";
+            this.buttonColor.UseVisualStyleBackColor = true;
+            this.buttonColor.Click += new System.EventHandler(this.buttonColor_Click);
             // 
-            // label1
+            // textBoxNote
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(-2, 100);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(0, 13);
-            this.label1.TabIndex = 4;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(1, 219);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(118, 60);
-            this.textBox1.TabIndex = 5;
-            this.textBox1.Text = "Note: Press \"Letf Shift\"\r\n while drawing to\r\n create straight line,\r\n circle, squ" +
+            this.textBoxNote.Location = new System.Drawing.Point(1, 289);
+            this.textBoxNote.Multiline = true;
+            this.textBoxNote.Name = "textBoxNote";
+            this.textBoxNote.ReadOnly = true;
+            this.textBoxNote.Size = new System.Drawing.Size(118, 60);
+            this.textBoxNote.TabIndex = 5;
+            this.textBoxNote.Text = "Note: Press \"Letf Shift\"\r\n while drawing to\r\n create straight line,\r\n circle, squ" +
     "are.";
             // 
             // buttonClean
             // 
             this.buttonClean.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.buttonClean.Location = new System.Drawing.Point(12, 97);
+            this.buttonClean.Location = new System.Drawing.Point(10, 136);
             this.buttonClean.Name = "buttonClean";
-            this.buttonClean.Size = new System.Drawing.Size(98, 31);
+            this.buttonClean.Size = new System.Drawing.Size(100, 31);
             this.buttonClean.TabIndex = 6;
             this.buttonClean.Text = "Clean field";
             this.buttonClean.UseVisualStyleBackColor = true;
@@ -110,7 +105,7 @@
             // 
             // textBoxPenWidth
             // 
-            this.textBoxPenWidth.Location = new System.Drawing.Point(12, 35);
+            this.textBoxPenWidth.Location = new System.Drawing.Point(10, 25);
             this.textBoxPenWidth.Name = "textBoxPenWidth";
             this.textBoxPenWidth.Size = new System.Drawing.Size(100, 20);
             this.textBoxPenWidth.TabIndex = 7;
@@ -120,11 +115,35 @@
             // labelPenWidth
             // 
             this.labelPenWidth.AutoSize = true;
-            this.labelPenWidth.Location = new System.Drawing.Point(14, 19);
+            this.labelPenWidth.Location = new System.Drawing.Point(14, 9);
             this.labelPenWidth.Name = "labelPenWidth";
             this.labelPenWidth.Size = new System.Drawing.Size(96, 13);
             this.labelPenWidth.TabIndex = 8;
             this.labelPenWidth.Text = "Change pen width:";
+            // 
+            // buttonSave
+            // 
+            this.buttonSave.Location = new System.Drawing.Point(10, 210);
+            this.buttonSave.Name = "buttonSave";
+            this.buttonSave.Size = new System.Drawing.Size(100, 31);
+            this.buttonSave.TabIndex = 9;
+            this.buttonSave.Text = "Save picture";
+            this.buttonSave.UseVisualStyleBackColor = true;
+            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
+            // 
+            // buttonLoad
+            // 
+            this.buttonLoad.Location = new System.Drawing.Point(10, 247);
+            this.buttonLoad.Name = "buttonLoad";
+            this.buttonLoad.Size = new System.Drawing.Size(100, 31);
+            this.buttonLoad.TabIndex = 10;
+            this.buttonLoad.Text = "Load picture";
+            this.buttonLoad.UseVisualStyleBackColor = true;
+            this.buttonLoad.Click += new System.EventHandler(this.buttonLoad_Click);
+            // 
+            // openFileDialog
+            // 
+            this.openFileDialog.FileName = "openFileDialog1";
             // 
             // MainForm
             // 
@@ -132,12 +151,13 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(718, 361);
+            this.Controls.Add(this.buttonLoad);
+            this.Controls.Add(this.buttonSave);
             this.Controls.Add(this.labelPenWidth);
             this.Controls.Add(this.textBoxPenWidth);
             this.Controls.Add(this.buttonClean);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.button_Color);
+            this.Controls.Add(this.textBoxNote);
+            this.Controls.Add(this.buttonColor);
             this.Controls.Add(this.checkedListBox);
             this.Controls.Add(this.pictureBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -157,13 +177,16 @@
         
         public System.Windows.Forms.PictureBox pictureBox;
         private System.Windows.Forms.CheckedListBox checkedListBox;
-        private System.Windows.Forms.Button button_Color;
+        private System.Windows.Forms.Button buttonColor;
         private System.Windows.Forms.ColorDialog colorDialog;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBoxNote;
         private System.Windows.Forms.Button buttonClean;
         private System.Windows.Forms.TextBox textBoxPenWidth;
         private System.Windows.Forms.Label labelPenWidth;
+        private System.Windows.Forms.Button buttonSave;
+        private System.Windows.Forms.Button buttonLoad;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog;
+        private System.Windows.Forms.OpenFileDialog openFileDialog;
     }
 }
 

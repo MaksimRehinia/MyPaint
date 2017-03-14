@@ -5,9 +5,9 @@ namespace Paint
 {
     class CreateRectangle : ICreate
     {
-        public IShape Create(params Point[] pt)
+        public IShape Create()
         {
-            return new Rectangles(pt);
+            return new Rectangles();
         }
     }
 }

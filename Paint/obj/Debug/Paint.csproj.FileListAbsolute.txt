@@ -7,3 +7,6 @@ D:\Maksim\univer\4 sem\ООТПиСП\1+2\Paint\Paint\obj\Debug\Paint.Properties
 D:\Maksim\univer\4 sem\ООТПиСП\1+2\Paint\Paint\obj\Debug\Paint.csproj.GenerateResource.Cache
 D:\Maksim\univer\4 sem\ООТПиСП\1+2\Paint\Paint\obj\Debug\Paint.exe
 D:\Maksim\univer\4 sem\ООТПиСП\1+2\Paint\Paint\obj\Debug\Paint.pdb
+D:\Maksim\univer\4 sem\ООТПиСП\1+2\Paint\Paint\bin\Debug\Newtonsoft.Json.dll
+D:\Maksim\univer\4 sem\ООТПиСП\1+2\Paint\Paint\bin\Debug\Newtonsoft.Json.pdb
+D:\Maksim\univer\4 sem\ООТПиСП\1+2\Paint\Paint\bin\Debug\Newtonsoft.Json.xml

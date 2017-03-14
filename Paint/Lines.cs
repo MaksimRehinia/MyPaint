@@ -3,18 +3,18 @@ using System.Drawing;
 
 namespace Paint
 {
+    [Serializable]
     class Lines: IShape
-    {
-        private Point FirstPoint;  // верхняя левая вершина
-        private Point SecondPoint; // нижняя правая вершина
-        
-        public Lines(params Point[] pt)
+    {             
+        public override void Draw(ref Graphics drawArea)
         {
-            FirstPoint = pt[0];
-            SecondPoint = pt[1];
+            drawArea.DrawLine(P, FirstPoint, SecondPoint);
         }
-        public void Draw(ref Graphics drawArea, ref Pen p, bool ShiftPressed)
-        {            
+
+        public override void Draw(ref Graphics drawArea, ref Pen p, bool shiftPressed)
+        {
+            P = p;                        
+
             drawArea.DrawLine(p, FirstPoint, SecondPoint);            
         }
     }

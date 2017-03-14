@@ -3,10 +3,11 @@ using System.Drawing;
 
 namespace Paint
 {
+    [Serializable]
     class Ovals: IShape
-    {
-        private Point FirstPoint;  // верхняя левая вершина
-        private Point SecondPoint; // нижняя правая вершина
+    {            
+        private bool shiftPressed;       
+
         public int Height
         {
             get
@@ -20,15 +21,21 @@ namespace Paint
             {              
                 return (SecondPoint.X - FirstPoint.X);                
             }
-        }
-        public Ovals(params Point[] pt)
+        }        
+        public override void Draw(ref Graphics drawArea)
         {
-            FirstPoint = pt[0];
-            SecondPoint = pt[1];
+            if (shiftPressed)
+                drawArea.DrawEllipse(P, FirstPoint.X, FirstPoint.Y, Width, Width);
+            else
+                drawArea.DrawEllipse(P, FirstPoint.X, FirstPoint.Y, Width, Height);
         }
-        public void Draw(ref Graphics drawArea, ref Pen p, bool ShiftPressed)
+
+        public override void Draw(ref Graphics drawArea, ref Pen p, bool shiftPressed)
         {
-            if (ShiftPressed)
+            P = p;            
+            this.shiftPressed = shiftPressed;
+
+            if (shiftPressed)
                 drawArea.DrawEllipse(p, FirstPoint.X, FirstPoint.Y, Width, Width);
             else
                 drawArea.DrawEllipse(p, FirstPoint.X, FirstPoint.Y, Width, Height);

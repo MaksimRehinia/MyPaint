@@ -3,10 +3,11 @@ using System.Drawing;
 
 namespace Paint
 {
+    [Serializable]
     class Rectangles: IShape
-    {
-        private Point FirstPoint;  
-        private Point SecondPoint; 
+    {                
+        private bool shiftPressed;
+
         public int Height
         {
             get
@@ -20,36 +21,43 @@ namespace Paint
             {                                                
                 return (SecondPoint.X - FirstPoint.X);
             }
-        }
-        public Rectangles(params Point[] pt)
-        {
-            FirstPoint = pt[0];
-            SecondPoint = pt[1];
         }        
-        public void Draw(ref Graphics drawArea, ref Pen p, bool ShiftPressed)
+
+        public override void Draw(ref Graphics drawArea)
         {
-            if ((FirstPoint.X > SecondPoint.X) && (FirstPoint.Y > SecondPoint.Y))
+            if (shiftPressed)
+                drawArea.DrawRectangle(P, FirstPoint.X, FirstPoint.Y, Width, Width);
+            else
+                drawArea.DrawRectangle(P, FirstPoint.X, FirstPoint.Y, Width, Height);
+        }
+
+        public override void Draw(ref Graphics drawArea, ref Pen p, bool shiftPressed)
+        {
+            P = p;                    
+            this.shiftPressed = shiftPressed;
+            if (shiftPressed)
             {
-                Point temp = FirstPoint;
-                FirstPoint = SecondPoint;
-                SecondPoint = temp;
+                if (SecondPoint.X > FirstPoint.X && SecondPoint.Y > FirstPoint.Y)
+                    drawArea.DrawRectangle(p, FirstPoint.X, FirstPoint.Y, SecondPoint.Y - FirstPoint.Y, SecondPoint.Y - FirstPoint.Y);
+                else if (SecondPoint.X < FirstPoint.X && SecondPoint.Y > FirstPoint.Y)
+                    drawArea.DrawRectangle(p, FirstPoint.X - (SecondPoint.Y - FirstPoint.Y), FirstPoint.Y, SecondPoint.Y - FirstPoint.Y, SecondPoint.Y - FirstPoint.Y);
+                else if (SecondPoint.X > FirstPoint.X && SecondPoint.Y < FirstPoint.Y)
+                    drawArea.DrawRectangle(p, FirstPoint.X, SecondPoint.Y, FirstPoint.Y - SecondPoint.Y, FirstPoint.Y - SecondPoint.Y);
+                else
+                    drawArea.DrawRectangle(p, FirstPoint.X - (FirstPoint.Y - SecondPoint.Y), SecondPoint.Y, FirstPoint.Y - SecondPoint.Y, FirstPoint.Y - SecondPoint.Y);
             }
-            if ((FirstPoint.X < SecondPoint.X) && (FirstPoint.Y > SecondPoint.Y))
+            else
             {
-                int temp = FirstPoint.Y;
-                FirstPoint.Y = SecondPoint.Y;
-                SecondPoint.Y = temp;                
+                if (SecondPoint.X > FirstPoint.X && SecondPoint.Y > FirstPoint.Y)
+                    drawArea.DrawRectangle(p, FirstPoint.X, FirstPoint.Y, SecondPoint.X - FirstPoint.X, SecondPoint.Y - FirstPoint.Y);
+                else if (SecondPoint.X < FirstPoint.X && SecondPoint.Y > FirstPoint.Y)
+                    drawArea.DrawRectangle(p, SecondPoint.X, FirstPoint.Y, FirstPoint.X - SecondPoint.X, SecondPoint.Y - FirstPoint.Y);
+                else if (SecondPoint.X > FirstPoint.X && SecondPoint.Y < FirstPoint.Y)
+                    drawArea.DrawRectangle(p, FirstPoint.X, SecondPoint.Y, SecondPoint.X - FirstPoint.X, FirstPoint.Y - SecondPoint.Y);
+                else
+                    drawArea.DrawRectangle(p, SecondPoint.X, SecondPoint.Y, FirstPoint.X - SecondPoint.X, FirstPoint.Y - SecondPoint.Y);                
             }
-            if ((FirstPoint.X > SecondPoint.X) && (FirstPoint.Y < SecondPoint.Y))
-            {
-                int temp = FirstPoint.X;
-                FirstPoint.X = SecondPoint.X;
-                SecondPoint.X = temp;
-            }
-            if (ShiftPressed)           
-                drawArea.DrawRectangle(p, FirstPoint.X, FirstPoint.Y, Width, Width);            
-            else            
-                drawArea.DrawRectangle(p, FirstPoint.X, FirstPoint.Y, Width, Height);            
+                        
         }
     }
 }
