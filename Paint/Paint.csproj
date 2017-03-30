@@ -50,11 +50,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configs.cs" />
     <Compile Include="CreateLine.cs" />
     <Compile Include="CreateOval.cs" />
     <Compile Include="CreateRectangle.cs" />
     <Compile Include="ICreate.cs" />
-    <Compile Include="IShape.cs" />
+    <Compile Include="Shape.cs" />
     <Compile Include="Lines.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>

@@ -5,7 +5,7 @@ namespace Paint
 {
     class CreateOval : ICreate
     {
-        public IShape Create()
+        public Shape Create()
         {
             return new Ovals();
         }

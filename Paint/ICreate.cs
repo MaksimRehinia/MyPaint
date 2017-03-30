@@ -5,6 +5,6 @@ namespace Paint
 {
     interface ICreate
     {
-        IShape Create();
+        Shape Create();
     }
 }

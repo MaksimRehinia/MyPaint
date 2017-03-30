@@ -8,23 +8,23 @@ namespace Paint
     class Configs
     {
         [DataMember]
-        public Color Color { set; get; }
+        public Color Color { get; set; }
         [DataMember]
-        public float Thickness { set; get; }
+        public float Width { get; set; }
         [DataMember]
-        public IShape CurrentFigure { set; get; }
+        public Shape CurrentFigure { get; set; }
 
         public Configs()
         {
             Color = Color.Black;
-            Thickness = 4;
+            Width = 2;
             CurrentFigure = null;
         }
         public Configs(Configs conf)
         {
             Color = conf.Color;
             CurrentFigure = conf.CurrentFigure;
-            Thickness = conf.Thickness;
+            Width = conf.Width;
         }
     }
 }

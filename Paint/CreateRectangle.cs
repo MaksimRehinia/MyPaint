@@ -5,7 +5,7 @@ namespace Paint
 {
     class CreateRectangle : ICreate
     {
-        public IShape Create()
+        public Shape Create()
         {
             return new Rectangles();
         }

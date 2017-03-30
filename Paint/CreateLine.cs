@@ -5,7 +5,7 @@ namespace Paint
 {
     class CreateLine : ICreate
     {
-        public IShape Create()
+        public Shape Create()
         {
             return new Lines();
         }

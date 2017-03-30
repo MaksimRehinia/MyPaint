@@ -6,7 +6,7 @@ namespace Paint
 {
     [KnownType(typeof(Rectangles))]
     [DataContract]
-    class Rectangles: IShape
+    class Rectangles: Shape
     {                
         private bool shiftPressed;
 
@@ -25,7 +25,7 @@ namespace Paint
             }
         }        
 
-        public override void Draw(ref Graphics drawArea)
+        public override void Draw(Graphics drawArea, Pen P)
         {
             if (shiftPressed)
                 drawArea.DrawRectangle(P, FirstPoint.X, FirstPoint.Y, Width, Width);
@@ -33,7 +33,7 @@ namespace Paint
                 drawArea.DrawRectangle(P, FirstPoint.X, FirstPoint.Y, Width, Height);
         }
 
-        public override void Draw(ref Graphics drawArea, bool shiftPressed)
+        public override void Draw(Graphics drawArea, Pen P, bool shiftPressed)
         {                                     
             this.shiftPressed = shiftPressed;
 

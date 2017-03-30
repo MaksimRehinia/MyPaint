@@ -14,11 +14,11 @@ namespace Paint
     {
         internal Graphics drawArea;
         private ICreate fabric = null;
-        private List<IShape> shapeList = new List<IShape>();
+        private List<Configs> shapeList = new List<Configs>();
         private Pen pen;                
         private bool lKeyPressed, shiftPressed = false;                
         private Bitmap btmp_front, btmp_back;
-        IShape shape;
+        private Configs configs;
 
         public MainForm()
         {
@@ -26,8 +26,9 @@ namespace Paint
         }
 
         private void MainForm_Load(object sender, EventArgs e)
-        {            
-            pen = new Pen(Color.Black, 2);
+        {
+            configs = new Configs();
+            pen = new Pen(configs.Color, configs.Width);            
             CleanField();
         }        
 
@@ -69,10 +70,11 @@ namespace Paint
         private void pictureBox_MouseDown(object sender, MouseEventArgs e)
         {
             if (fabric != null)
-            {                
-                shape = fabric.Create();
-                shape.FirstPoint = new Point(e.X, e.Y);
-                shape.P = new Pen(pen.Color, pen.Width);
+            {
+
+                //configs = new Configs();
+                configs.CurrentFigure = fabric.Create();
+                configs.CurrentFigure.FirstPoint = new Point(e.X, e.Y);                
             }
             lKeyPressed = true;
         }
@@ -81,10 +83,10 @@ namespace Paint
         {
             if ((lKeyPressed) && (fabric != null))
             {
-                shape.SecondPoint = new Point(e.X, e.Y);
+                configs.CurrentFigure.SecondPoint = new Point(e.X, e.Y);
                 drawArea.Clear(Color.White);
                 drawArea.DrawImage(btmp_back, 0, 0);
-                shape.Draw(ref drawArea, shiftPressed);
+                configs.CurrentFigure.Draw(drawArea, pen, shiftPressed);
                 pictureBox.Refresh();
             }
         }
@@ -93,11 +95,11 @@ namespace Paint
         {            
             if (fabric != null)
             {
-                shape.SecondPoint = new Point(e.X, e.Y);
-                shape.P = new Pen(pen.Color, pen.Width);                
-                shape.Draw(ref drawArea, shiftPressed);
+                configs.CurrentFigure.SecondPoint = new Point(e.X, e.Y);                
+                configs.CurrentFigure.Draw(drawArea, pen, shiftPressed);
                 btmp_back = (Bitmap)btmp_front.Clone();
-                shapeList.Add(shape);
+                var temp = new Configs(configs);
+                shapeList.Add(temp);                
                 pictureBox.Refresh();
             }
             lKeyPressed = false;
@@ -108,7 +110,7 @@ namespace Paint
             DialogResult D = colorDialog.ShowDialog();
             if (D == DialogResult.OK)
             {
-                pen.Color = buttonColor.ForeColor = colorDialog.Color;
+                configs.Color = pen.Color = buttonColor.ForeColor = colorDialog.Color;
             }
         }
 
@@ -121,7 +123,7 @@ namespace Paint
         {
             int width;
             if (int.TryParse((sender as TextBox).Text, out width))
-                pen.Width = width;
+                configs.Width = pen.Width = width;
             else
             {
                 pen.Width = 2;
@@ -136,19 +138,16 @@ namespace Paint
             if (File.Exists(saveFileDialog.FileName))
             {
                 File.Delete(saveFileDialog.FileName);
-            }
-            string filename = saveFileDialog.FileName;
-
-            JsonSerializer serializer = new JsonSerializer();
-            serializer.TypeNameHandling = TypeNameHandling.All;
+            }            
+            
             try
-            {
-                //using (FileStream fs = new FileStream(filename, FileMode.Create))
-                using (StreamWriter fs = new StreamWriter(filename))
-                {                                                          
-                   /* BsonWriter writer = new BsonWriter(fs);
-                    //serializer.Serialize(writer, shapeList);
-                    //Rectangles t = (shape as Rectangles);*/
+            {                
+                using (StreamWriter fs = new StreamWriter(saveFileDialog.FileName))
+                {
+                    /* BsonWriter writer = new BsonWriter(fs);
+                     //serializer.Serialize(writer, shapeList);*/                     
+                    JsonSerializer serializer = new JsonSerializer();
+                    serializer.TypeNameHandling = TypeNameHandling.All;
                     serializer.Serialize(fs, shapeList);
                     
                 }
@@ -162,63 +161,31 @@ namespace Paint
         private void buttonLoad_Click(object sender, EventArgs e)
         {
             if (openFileDialog.ShowDialog() == DialogResult.Cancel)
-                return;            
-            string filename = openFileDialog.FileName;                                    
+                return;                                                            
                         
             CleanField();
-            var shapes = new List<IShape>();
-            using (StreamReader streamReader = new StreamReader(filename, Encoding.ASCII))
+            var shapes = new List<Configs>();
+            using (StreamReader streamReader = new StreamReader(openFileDialog.FileName, Encoding.ASCII))
             {
                 using (JsonTextReader jsonTextReader = new JsonTextReader(streamReader))
                 {
                     try
                     {
-                        JsonSerializer ser = new JsonSerializer();
-                        ser.TypeNameHandling = TypeNameHandling.All;
-                        shapes = (List<IShape>)ser.Deserialize(jsonTextReader);
-                        foreach (var elem in shapes)
+                        JsonSerializer deserializer = new JsonSerializer();
+                        deserializer.TypeNameHandling = TypeNameHandling.All;
+                        shapes = (List<Configs>)deserializer.Deserialize(jsonTextReader);                        
+                        foreach (Configs shape in shapes)
                         {                            
-                            elem.Draw(ref drawArea);
+                            shape.CurrentFigure.Draw(drawArea, new Pen(shape.Color, shape.Width));
                         }
-                        btmp_back = (Bitmap)btmp_front.Clone();
-                        streamReader.Close();
+                        btmp_back = (Bitmap)btmp_front.Clone();                        
                     }
-                    catch (InvalidCastException ice)
+                    catch (Exception ex)
                     {
-                        MessageBox.Show("Невалидный JSON");
-                    }
-                    catch (Exception exe)
-                    {
-                        MessageBox.Show("Ошибка");
-                    }
-                    finally
-                    {
-
+                        MessageBox.Show(ex.ToString());
                     }
                 }
-            }
-            /*JsonSerializer serializer = new JsonSerializer();            
-            try
-            {
-                using (FileStream fs = new FileStream(filename, FileMode.Open))
-                {
-                    BsonReader reader = new BsonReader(fs);
-                    var deserilizedShapes = (serializer.Deserialize<IShape>(reader) as Rectangles);
-                 // var deserilizedShapes = (serializer.Deserialize(reader) as Rectangles);
-
-                 // foreach (IShape shape in deserilizedShapes)
-                //  {
-                        deserilizedShapes.Draw(ref drawArea);
-                     // btmp_back = (Bitmap)btmp_front.Clone();                    
-                        pictureBox.Refresh();
-               //   }
-
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }*/
+            }            
         }        
 
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
