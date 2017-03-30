@@ -70,9 +70,7 @@ namespace Paint
         private void pictureBox_MouseDown(object sender, MouseEventArgs e)
         {
             if (fabric != null)
-            {
-
-                //configs = new Configs();
+            {                
                 configs.CurrentFigure = fabric.Create();
                 configs.CurrentFigure.FirstPoint = new Point(e.X, e.Y);                
             }
@@ -142,14 +140,14 @@ namespace Paint
             
             try
             {                
-                using (StreamWriter fs = new StreamWriter(saveFileDialog.FileName))
+                using (FileStream fs = new FileStream(saveFileDialog.FileName, FileMode.Create))                
                 {
-                    /* BsonWriter writer = new BsonWriter(fs);
-                     //serializer.Serialize(writer, shapeList);*/                     
+                    BsonWriter writer = new BsonWriter(fs);
+                    writer.WriteStartArray();                    
                     JsonSerializer serializer = new JsonSerializer();
-                    serializer.TypeNameHandling = TypeNameHandling.All;
-                    serializer.Serialize(fs, shapeList);
-                    
+                    serializer.TypeNameHandling = TypeNameHandling.Arrays;
+                    //writer.WriteEndArray();
+                    serializer.Serialize(writer, shapeList);                 
                 }
             }
             catch(Exception ex)
@@ -164,19 +162,22 @@ namespace Paint
                 return;                                                            
                         
             CleanField();
-            var shapes = new List<Configs>();
-            using (StreamReader streamReader = new StreamReader(openFileDialog.FileName, Encoding.ASCII))
+            var shapes = new List<Configs>();            
+            using (FileStream streamReader = new FileStream(openFileDialog.FileName, FileMode.Open))
             {
-                using (JsonTextReader jsonTextReader = new JsonTextReader(streamReader))
+                //using (JsonTextReader jsonTextReader = new JsonTextReader(streamReader))
                 {
                     try
                     {
+                        BsonReader reader = new BsonReader(streamReader);
+                        reader.ReadRootValueAsArray = true;                                       
                         JsonSerializer deserializer = new JsonSerializer();
-                        deserializer.TypeNameHandling = TypeNameHandling.All;
-                        shapes = (List<Configs>)deserializer.Deserialize(jsonTextReader);                        
+                        deserializer.TypeNameHandling = TypeNameHandling.Arrays;
+                        //shapes = (List<Configs>)deserializer.Deserialize(jsonTextReader);
+                        shapes = (deserializer.Deserialize<List<Configs>>(reader));
                         foreach (Configs shape in shapes)
                         {                            
-                            shape.CurrentFigure.Draw(drawArea, new Pen(shape.Color, shape.Width));
+                            shape.CurrentFigure.Draw(drawArea, new Pen(shape.Color, shape.Width), shape.ShiftPressed);
                         }
                         btmp_back = (Bitmap)btmp_front.Clone();                        
                     }
@@ -191,13 +192,13 @@ namespace Paint
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Shift)            
-                shiftPressed = true;             
+                configs.ShiftPressed = shiftPressed = true;             
         }
 
         private void MainForm_KeyUp(object sender, KeyEventArgs e)
         {
             if (!e.Shift)
-                shiftPressed = false;
+                configs.ShiftPressed = shiftPressed = false;
         }
     }
 }

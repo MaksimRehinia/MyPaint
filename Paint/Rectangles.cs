@@ -7,9 +7,7 @@ namespace Paint
     [KnownType(typeof(Rectangles))]
     [DataContract]
     class Rectangles: Shape
-    {                
-        private bool shiftPressed;
-
+    {                        
         public int Height
         {
             get
@@ -25,18 +23,8 @@ namespace Paint
             }
         }        
 
-        public override void Draw(Graphics drawArea, Pen P)
-        {
-            if (shiftPressed)
-                drawArea.DrawRectangle(P, FirstPoint.X, FirstPoint.Y, Width, Width);
-            else
-                drawArea.DrawRectangle(P, FirstPoint.X, FirstPoint.Y, Width, Height);
-        }
-
         public override void Draw(Graphics drawArea, Pen P, bool shiftPressed)
-        {                                     
-            this.shiftPressed = shiftPressed;
-
+        {                                                 
             if (shiftPressed)
             {
                 if (SecondPoint.X > FirstPoint.X && SecondPoint.Y > FirstPoint.Y)

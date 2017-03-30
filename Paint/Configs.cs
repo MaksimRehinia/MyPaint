@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Runtime.Serialization;
 
 namespace Paint
-{
+{    
     [DataContract]
     class Configs
     {
@@ -12,12 +12,15 @@ namespace Paint
         [DataMember]
         public float Width { get; set; }
         [DataMember]
+        public bool ShiftPressed { get; set; }
+        [DataMember]
         public Shape CurrentFigure { get; set; }
 
         public Configs()
         {
             Color = Color.Black;
             Width = 2;
+            ShiftPressed = false;                
             CurrentFigure = null;
         }
         public Configs(Configs conf)
@@ -25,6 +28,7 @@ namespace Paint
             Color = conf.Color;
             CurrentFigure = conf.CurrentFigure;
             Width = conf.Width;
+            ShiftPressed = conf.ShiftPressed;
         }
     }
 }

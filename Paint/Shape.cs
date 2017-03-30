@@ -12,8 +12,8 @@ namespace Paint
         public Point FirstPoint { get; set; }
         [DataMember]
         public Point SecondPoint { get; set; }        
-
-        public abstract void Draw(Graphics drawArea, Pen P);
+        
         public abstract void Draw(Graphics drawArea, Pen P, bool ShiftPressed);
+
     }
 }

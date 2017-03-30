@@ -74,9 +74,9 @@
             // buttonColor
             // 
             this.buttonColor.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.buttonColor.Location = new System.Drawing.Point(268, 9);
+            this.buttonColor.Location = new System.Drawing.Point(226, 9);
             this.buttonColor.Name = "buttonColor";
-            this.buttonColor.Size = new System.Drawing.Size(100, 31);
+            this.buttonColor.Size = new System.Drawing.Size(78, 31);
             this.buttonColor.TabIndex = 3;
             this.buttonColor.Text = "Change color";
             this.buttonColor.UseVisualStyleBackColor = true;
@@ -90,15 +90,14 @@
             this.textBoxNote.ReadOnly = true;
             this.textBoxNote.Size = new System.Drawing.Size(118, 60);
             this.textBoxNote.TabIndex = 5;
-            this.textBoxNote.Text = "Note: Press \"Letf Shift\"\r\n while drawing to\r\n create straight line,\r\n circle, squ" +
-    "are.";
+            this.textBoxNote.Text = "Note: Press \"Letf Shift\"\r\n while drawing to\r\n create circle, square.";
             // 
             // buttonClean
             // 
             this.buttonClean.Cursor = System.Windows.Forms.Cursors.Hand;
             this.buttonClean.Location = new System.Drawing.Point(147, 9);
             this.buttonClean.Name = "buttonClean";
-            this.buttonClean.Size = new System.Drawing.Size(100, 31);
+            this.buttonClean.Size = new System.Drawing.Size(73, 31);
             this.buttonClean.TabIndex = 6;
             this.buttonClean.Text = "Clean field";
             this.buttonClean.UseVisualStyleBackColor = true;
@@ -124,9 +123,9 @@
             // 
             // buttonSave
             // 
-            this.buttonSave.Location = new System.Drawing.Point(390, 9);
+            this.buttonSave.Location = new System.Drawing.Point(310, 9);
             this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(100, 31);
+            this.buttonSave.Size = new System.Drawing.Size(78, 31);
             this.buttonSave.TabIndex = 9;
             this.buttonSave.Text = "Save picture";
             this.buttonSave.UseVisualStyleBackColor = true;
@@ -134,9 +133,9 @@
             // 
             // buttonLoad
             // 
-            this.buttonLoad.Location = new System.Drawing.Point(511, 9);
+            this.buttonLoad.Location = new System.Drawing.Point(394, 9);
             this.buttonLoad.Name = "buttonLoad";
-            this.buttonLoad.Size = new System.Drawing.Size(100, 31);
+            this.buttonLoad.Size = new System.Drawing.Size(78, 31);
             this.buttonLoad.TabIndex = 10;
             this.buttonLoad.Text = "Load picture";
             this.buttonLoad.UseVisualStyleBackColor = true;
