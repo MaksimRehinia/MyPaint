@@ -46,9 +46,9 @@
             // pictureBox
             // 
             this.pictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox.Location = new System.Drawing.Point(127, 12);
+            this.pictureBox.Location = new System.Drawing.Point(147, 51);
             this.pictureBox.Name = "pictureBox";
-            this.pictureBox.Size = new System.Drawing.Size(579, 337);
+            this.pictureBox.Size = new System.Drawing.Size(724, 337);
             this.pictureBox.TabIndex = 1;
             this.pictureBox.TabStop = false;
             this.pictureBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseDown);
@@ -64,16 +64,17 @@
             "Line",
             "Oval",
             "Rectangle"});
-            this.checkedListBox.Location = new System.Drawing.Point(3, 51);
+            this.checkedListBox.Location = new System.Drawing.Point(1, 51);
             this.checkedListBox.Name = "checkedListBox";
-            this.checkedListBox.Size = new System.Drawing.Size(120, 79);
+            this.checkedListBox.ScrollAlwaysVisible = true;
+            this.checkedListBox.Size = new System.Drawing.Size(140, 154);
             this.checkedListBox.TabIndex = 2;
             this.checkedListBox.Click += new System.EventHandler(this.checkedListBox1_Click);
             // 
             // buttonColor
             // 
             this.buttonColor.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.buttonColor.Location = new System.Drawing.Point(10, 173);
+            this.buttonColor.Location = new System.Drawing.Point(268, 9);
             this.buttonColor.Name = "buttonColor";
             this.buttonColor.Size = new System.Drawing.Size(100, 31);
             this.buttonColor.TabIndex = 3;
@@ -83,7 +84,7 @@
             // 
             // textBoxNote
             // 
-            this.textBoxNote.Location = new System.Drawing.Point(1, 289);
+            this.textBoxNote.Location = new System.Drawing.Point(1, 220);
             this.textBoxNote.Multiline = true;
             this.textBoxNote.Name = "textBoxNote";
             this.textBoxNote.ReadOnly = true;
@@ -95,7 +96,7 @@
             // buttonClean
             // 
             this.buttonClean.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.buttonClean.Location = new System.Drawing.Point(10, 136);
+            this.buttonClean.Location = new System.Drawing.Point(147, 9);
             this.buttonClean.Name = "buttonClean";
             this.buttonClean.Size = new System.Drawing.Size(100, 31);
             this.buttonClean.TabIndex = 6;
@@ -123,7 +124,7 @@
             // 
             // buttonSave
             // 
-            this.buttonSave.Location = new System.Drawing.Point(10, 210);
+            this.buttonSave.Location = new System.Drawing.Point(390, 9);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(100, 31);
             this.buttonSave.TabIndex = 9;
@@ -133,7 +134,7 @@
             // 
             // buttonLoad
             // 
-            this.buttonLoad.Location = new System.Drawing.Point(10, 247);
+            this.buttonLoad.Location = new System.Drawing.Point(511, 9);
             this.buttonLoad.Name = "buttonLoad";
             this.buttonLoad.Size = new System.Drawing.Size(100, 31);
             this.buttonLoad.TabIndex = 10;
@@ -150,7 +151,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(718, 361);
+            this.ClientSize = new System.Drawing.Size(883, 394);
             this.Controls.Add(this.buttonLoad);
             this.Controls.Add(this.buttonSave);
             this.Controls.Add(this.labelPenWidth);

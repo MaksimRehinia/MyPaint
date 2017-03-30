@@ -3,8 +3,10 @@ using System.Drawing;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.IO;
+using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
+using System.Text;
 
 namespace Paint
 {
@@ -13,7 +15,7 @@ namespace Paint
         internal Graphics drawArea;
         private ICreate fabric = null;
         private List<IShape> shapeList = new List<IShape>();
-        private Pen pen = new Pen(Color.Black, 2);                
+        private Pen pen;                
         private bool lKeyPressed, shiftPressed = false;                
         private Bitmap btmp_front, btmp_back;
         IShape shape;
@@ -25,12 +27,18 @@ namespace Paint
 
         private void MainForm_Load(object sender, EventArgs e)
         {            
+            pen = new Pen(Color.Black, 2);
+            CleanField();
+        }        
+
+        private void CleanField()
+        {
             btmp_back = new Bitmap(pictureBox.Width, pictureBox.Height);
             btmp_front = new Bitmap(pictureBox.Width, pictureBox.Height);
             drawArea = Graphics.FromImage(btmp_front);
             pictureBox.Image = btmp_front;
             pictureBox.BackgroundImage = btmp_back;
-        }        
+        }
 
         private void checkedListBox1_Click(object sender, EventArgs e)
         {
@@ -63,7 +71,8 @@ namespace Paint
             if (fabric != null)
             {                
                 shape = fabric.Create();
-                shape.FirstPoint = e.Location;
+                shape.FirstPoint = new Point(e.X, e.Y);
+                shape.P = new Pen(pen.Color, pen.Width);
             }
             lKeyPressed = true;
         }
@@ -72,10 +81,10 @@ namespace Paint
         {
             if ((lKeyPressed) && (fabric != null))
             {
-                shape.SecondPoint = e.Location;                             
+                shape.SecondPoint = new Point(e.X, e.Y);
                 drawArea.Clear(Color.White);
                 drawArea.DrawImage(btmp_back, 0, 0);
-                shape.Draw(ref drawArea, ref pen, shiftPressed);
+                shape.Draw(ref drawArea, shiftPressed);
                 pictureBox.Refresh();
             }
         }
@@ -84,8 +93,9 @@ namespace Paint
         {            
             if (fabric != null)
             {
-                shape.SecondPoint = e.Location;                               
-                shape.Draw(ref drawArea, ref pen, shiftPressed);
+                shape.SecondPoint = new Point(e.X, e.Y);
+                shape.P = new Pen(pen.Color, pen.Width);                
+                shape.Draw(ref drawArea, shiftPressed);
                 btmp_back = (Bitmap)btmp_front.Clone();
                 shapeList.Add(shape);
                 pictureBox.Refresh();
@@ -104,12 +114,7 @@ namespace Paint
 
         private void buttonClean_Click(object sender, EventArgs e)
         {
-            //pictureBox.Refresh();
-            /* btmp = new Bitmap(pictureBox.Width, pictureBox.Height);
-             pictureBox.Image = btmp;
-             drawArea = Graphics.FromImage(btmp);*/
-            drawArea.Clear(Color.White);
-            drawArea.DrawImage(btmp_back, 0, 0);
+            CleanField();            
         }        
 
         private void textBoxPenWidth_TextChanged(object sender, EventArgs e)
@@ -127,56 +132,93 @@ namespace Paint
         private void buttonSave_Click(object sender, EventArgs e)
         {
             if (saveFileDialog.ShowDialog() == DialogResult.Cancel)
-                return;            
+                return;
+            if (File.Exists(saveFileDialog.FileName))
+            {
+                File.Delete(saveFileDialog.FileName);
+            }
             string filename = saveFileDialog.FileName;
 
             JsonSerializer serializer = new JsonSerializer();
-                      
+            serializer.TypeNameHandling = TypeNameHandling.All;
             try
             {
-                using (FileStream fs = new FileStream(filename, FileMode.Create))
-                {
-                    BsonWriter writer = new BsonWriter(fs);
+                //using (FileStream fs = new FileStream(filename, FileMode.Create))
+                using (StreamWriter fs = new StreamWriter(filename))
+                {                                                          
+                   /* BsonWriter writer = new BsonWriter(fs);
                     //serializer.Serialize(writer, shapeList);
-                    serializer.Serialize(writer, shape);
+                    //Rectangles t = (shape as Rectangles);*/
+                    serializer.Serialize(fs, shapeList);
+                    
                 }
             }
             catch(Exception ex)
             {
                 MessageBox.Show(ex.ToString());
-            }            
+            }  
         }
 
         private void buttonLoad_Click(object sender, EventArgs e)
         {
             if (openFileDialog.ShowDialog() == DialogResult.Cancel)
                 return;            
-            string filename = openFileDialog.FileName;
+            string filename = openFileDialog.FileName;                                    
+                        
+            CleanField();
+            var shapes = new List<IShape>();
+            using (StreamReader streamReader = new StreamReader(filename, Encoding.ASCII))
+            {
+                using (JsonTextReader jsonTextReader = new JsonTextReader(streamReader))
+                {
+                    try
+                    {
+                        JsonSerializer ser = new JsonSerializer();
+                        ser.TypeNameHandling = TypeNameHandling.All;
+                        shapes = (List<IShape>)ser.Deserialize(jsonTextReader);
+                        foreach (var elem in shapes)
+                        {                            
+                            elem.Draw(ref drawArea);
+                        }
+                        btmp_back = (Bitmap)btmp_front.Clone();
+                        streamReader.Close();
+                    }
+                    catch (InvalidCastException ice)
+                    {
+                        MessageBox.Show("Невалидный JSON");
+                    }
+                    catch (Exception exe)
+                    {
+                        MessageBox.Show("Ошибка");
+                    }
+                    finally
+                    {
 
-            drawArea.Clear(Color.White);
-
-            JsonSerializer serializer = new JsonSerializer();            
+                    }
+                }
+            }
+            /*JsonSerializer serializer = new JsonSerializer();            
             try
             {
                 using (FileStream fs = new FileStream(filename, FileMode.Open))
                 {
                     BsonReader reader = new BsonReader(fs);
-                    var deserilizedShapes = serializer.Deserialize<IShape>(reader);
-                   // var deserilizedShapes = (serializer.Deserialize(reader) as Rectangles);
+                    var deserilizedShapes = (serializer.Deserialize<IShape>(reader) as Rectangles);
+                 // var deserilizedShapes = (serializer.Deserialize(reader) as Rectangles);
 
-                    // foreach (IShape shape in deserilizedShapes)
-                    //  {
-                    deserilizedShapes.Draw(ref drawArea);
-                    btmp_back = (Bitmap)btmp_front.Clone();                    
-                    pictureBox.Refresh();
-                    //   }
+                 // foreach (IShape shape in deserilizedShapes)
+                //  {
+                        deserilizedShapes.Draw(ref drawArea);
+                     // btmp_back = (Bitmap)btmp_front.Clone();                    
+                        pictureBox.Refresh();
+               //   }
 
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
-            }
+            }*/
         }        
 
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
@@ -187,7 +229,8 @@ namespace Paint
 
         private void MainForm_KeyUp(object sender, KeyEventArgs e)
         {
-            shiftPressed = false;
+            if (!e.Shift)
+                shiftPressed = false;
         }
     }
 }

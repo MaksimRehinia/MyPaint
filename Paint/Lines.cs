@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Drawing;
+using System.Runtime.Serialization;
 
 namespace Paint
 {
-    [Serializable]
+    [KnownType(typeof(Lines))]
+    [DataContract]
     class Lines: IShape
     {             
         public override void Draw(ref Graphics drawArea)
@@ -11,11 +13,9 @@ namespace Paint
             drawArea.DrawLine(P, FirstPoint, SecondPoint);
         }
 
-        public override void Draw(ref Graphics drawArea, ref Pen p, bool shiftPressed)
-        {
-            P = p;                        
-
-            drawArea.DrawLine(p, FirstPoint, SecondPoint);            
+        public override void Draw(ref Graphics drawArea, bool shiftPressed)
+        {                                   
+            drawArea.DrawLine(P, FirstPoint, SecondPoint);            
         }
     }
 }

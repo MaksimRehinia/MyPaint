@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Drawing;
+using System.Runtime.Serialization;
 
 namespace Paint
 {
-    [Serializable]
+    [KnownType(typeof(Ovals))]
+    [DataContract]
     class Ovals: IShape
     {            
         private bool shiftPressed;       
@@ -30,15 +32,14 @@ namespace Paint
                 drawArea.DrawEllipse(P, FirstPoint.X, FirstPoint.Y, Width, Height);
         }
 
-        public override void Draw(ref Graphics drawArea, ref Pen p, bool shiftPressed)
-        {
-            P = p;            
+        public override void Draw(ref Graphics drawArea, bool shiftPressed)
+        {                        
             this.shiftPressed = shiftPressed;
 
             if (shiftPressed)
-                drawArea.DrawEllipse(p, FirstPoint.X, FirstPoint.Y, Width, Width);
+                drawArea.DrawEllipse(P, FirstPoint.X, FirstPoint.Y, Width, Width);
             else
-                drawArea.DrawEllipse(p, FirstPoint.X, FirstPoint.Y, Width, Height);
+                drawArea.DrawEllipse(P, FirstPoint.X, FirstPoint.Y, Width, Height);
         }
     }
 }
