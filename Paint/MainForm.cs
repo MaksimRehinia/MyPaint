@@ -16,9 +16,10 @@ namespace Paint
         private ICreate fabric = null;
         private List<Configs> shapeList = new List<Configs>();
         private Pen pen;                
-        private bool lKeyPressed, shiftPressed = false;                
+        private bool shiftPressed = false;                
         private Bitmap btmp_front, btmp_back;
         private Configs configs;
+        private Configs SelectedShape;
 
         public MainForm()
         {
@@ -69,17 +70,19 @@ namespace Paint
 
         private void pictureBox_MouseDown(object sender, MouseEventArgs e)
         {
-            if (fabric != null)
-            {                
-                configs.CurrentFigure = fabric.Create();
-                configs.CurrentFigure.FirstPoint = new Point(e.X, e.Y);                
-            }
-            lKeyPressed = true;
+            if (e.Button == MouseButtons.Left)
+            {
+                if (fabric != null)
+                {
+                    configs.CurrentFigure = fabric.Create();
+                    configs.CurrentFigure.FirstPoint = new Point(e.X, e.Y);
+                }
+            }            
         }
 
         private void pictureBox_MouseMove(object sender, MouseEventArgs e)
         {
-            if ((lKeyPressed) && (fabric != null))
+            if ((e.Button == MouseButtons.Left) && (fabric != null))
             {
                 configs.CurrentFigure.SecondPoint = new Point(e.X, e.Y);
                 drawArea.Clear(Color.White);
@@ -90,17 +93,36 @@ namespace Paint
         }
 
         private void pictureBox_MouseUp(object sender, MouseEventArgs e)
-        {            
-            if (fabric != null)
+        {
+            drawArea.Clear(Color.Transparent);
+            drawArea.DrawImage(btmp_back, 0, 0);
+            pictureBox.Refresh();
+            SelectedShape = null;
+            if (e.Button == MouseButtons.Left)
             {
-                configs.CurrentFigure.SecondPoint = new Point(e.X, e.Y);                
-                configs.CurrentFigure.Draw(drawArea, pen, shiftPressed);
-                btmp_back = (Bitmap)btmp_front.Clone();
-                var temp = new Configs(configs);
-                shapeList.Add(temp);                
-                pictureBox.Refresh();
+                if (fabric != null)
+                {
+                    configs.CurrentFigure.SecondPoint = new Point(e.X, e.Y);
+                    configs.CurrentFigure.Draw(drawArea, pen, shiftPressed);
+                    btmp_back = (Bitmap)btmp_front.Clone();                    
+                    shapeList.Add(new Configs(configs));
+                    pictureBox.Refresh();
+                }                
             }
-            lKeyPressed = false;
+            if (e.Button == MouseButtons.Right)
+            {
+                var shapes = new List<Configs>(shapeList);
+                for (int i = shapes.Count - 1; i >= 0; i--)
+                {
+                    if (shapes[i].CurrentFigure is ISelectable && shapes[i].CurrentFigure.isInArea(new Point(e.X, e.Y)))
+                    {
+                        shapes[i].CurrentFigure.Select(drawArea);                        
+                        pictureBox.Refresh();
+                        SelectedShape = shapes[i];                       
+                        break;
+                    }
+                }
+            }            
         }
 
         private void buttonColor_Click(object sender, EventArgs e)
@@ -119,12 +141,12 @@ namespace Paint
 
         private void textBoxPenWidth_TextChanged(object sender, EventArgs e)
         {
-            int width;
-            if (int.TryParse((sender as TextBox).Text, out width))
+            float width;
+            if (float.TryParse((sender as TextBox).Text, out width))
                 configs.Width = pen.Width = width;
             else
             {
-                pen.Width = 2;
+                pen.Width = 2F;
                 (sender as TextBox).Text = "2";
             }                
         }

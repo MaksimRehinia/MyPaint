@@ -6,7 +6,7 @@ namespace Paint
 {        
     [KnownType(typeof(Shape))]
     [DataContract]
-    abstract class Shape
+    abstract class Shape: ISelectable
     {
         [DataMember]
         public Point FirstPoint { get; set; }
@@ -15,5 +15,34 @@ namespace Paint
         
         public abstract void Draw(Graphics drawArea, Pen P, bool ShiftPressed);
 
+        public virtual bool isInArea(Point point)
+        {
+            var temp = new Point();
+            temp.X = Math.Min(FirstPoint.X, SecondPoint.X);
+            temp.Y = Math.Min(FirstPoint.Y, SecondPoint.Y);
+            int length = Math.Abs(SecondPoint.X - FirstPoint.X);
+            int height = Math.Abs(SecondPoint.Y - FirstPoint.Y);
+            if (point.X >= temp.X && point.X <= temp.X + length &&
+                point.Y >= temp.Y && point.Y <= temp.Y + height)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public virtual void Select(Graphics graphics)
+        {
+            var pen = new Pen(Color.Gray, 2F);
+            pen.DashPattern = new float[] { 4, 3 };
+            var temp = new Point();
+            temp.X = Math.Min(FirstPoint.X, SecondPoint.X);
+            temp.Y = Math.Min(FirstPoint.Y, SecondPoint.Y);
+            int length = Math.Abs(SecondPoint.X - FirstPoint.X);
+            int height = Math.Abs(SecondPoint.Y - FirstPoint.Y);
+            graphics.DrawRectangle(pen, temp.X, temp.Y, length, height);
+        }
     }
 }

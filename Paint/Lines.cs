@@ -11,6 +11,13 @@ namespace Paint
         public override void Draw(Graphics drawArea, Pen P, bool shiftPressed)
         {                                   
             drawArea.DrawLine(P, FirstPoint, SecondPoint);            
+        }        
+
+        public override void Select(Graphics graphics)
+        {
+            var pen = new Pen(Color.Gray, 2F);
+            pen.DashPattern = new float[] { 4, 3 };          
+            graphics.DrawLine(pen, FirstPoint, SecondPoint);
         }
     }
 }
