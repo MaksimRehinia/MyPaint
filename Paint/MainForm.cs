@@ -16,10 +16,11 @@ namespace Paint
         private ICreate fabric = null;
         private List<Configs> shapeList = new List<Configs>();
         private Pen pen;                
-        private bool shiftPressed = false;                
+        private bool shiftPressed = false;
+        private bool mooving = false;
         private Bitmap btmp_front, btmp_back;
         private Configs configs;
-        private Configs SelectedShape;
+        private Configs selectedShape;        
 
         public MainForm()
         {
@@ -38,8 +39,8 @@ namespace Paint
             btmp_back = new Bitmap(pictureBox.Width, pictureBox.Height);
             btmp_front = new Bitmap(pictureBox.Width, pictureBox.Height);
             drawArea = Graphics.FromImage(btmp_front);
-            pictureBox.Image = btmp_front;
             pictureBox.BackgroundImage = btmp_back;
+            pictureBox.Image = btmp_front;            
         }
 
         private void checkedListBox1_Click(object sender, EventArgs e)
@@ -97,7 +98,7 @@ namespace Paint
             drawArea.Clear(Color.Transparent);
             drawArea.DrawImage(btmp_back, 0, 0);
             pictureBox.Refresh();
-            SelectedShape = null;
+            selectedShape = null;
             if (e.Button == MouseButtons.Left)
             {
                 if (fabric != null)
@@ -118,7 +119,7 @@ namespace Paint
                     {
                         shapes[i].CurrentFigure.Select(drawArea);                        
                         pictureBox.Refresh();
-                        SelectedShape = shapes[i];                       
+                        selectedShape = shapes[i];                       
                         break;
                     }
                 }
@@ -161,13 +162,14 @@ namespace Paint
             }            
             
             try
-            {                
-                using (FileStream fs = new FileStream(saveFileDialog.FileName, FileMode.Create))                
+            {
+                using (StreamWriter writer = new StreamWriter(saveFileDialog.FileName))
+                //using (FileStream fs = new FileStream(saveFileDialog.FileName, FileMode.Create))                
                 {
-                    BsonWriter writer = new BsonWriter(fs);
-                    writer.WriteStartArray();                    
+                    //BsonWriter writer = new BsonWriter(fs);
+                    //writer.WriteStartArray();                    
                     JsonSerializer serializer = new JsonSerializer();
-                    serializer.TypeNameHandling = TypeNameHandling.Arrays;
+                    serializer.TypeNameHandling = TypeNameHandling.All;
                     //writer.WriteEndArray();
                     serializer.Serialize(writer, shapeList);                 
                 }
@@ -183,20 +185,21 @@ namespace Paint
             if (openFileDialog.ShowDialog() == DialogResult.Cancel)
                 return;                                                            
                         
-            CleanField();
-            var shapes = new List<Configs>();            
-            using (FileStream streamReader = new FileStream(openFileDialog.FileName, FileMode.Open))
+            CleanField();            
+            using (StreamReader streamReader = new StreamReader(openFileDialog.FileName, Encoding.ASCII))
+            //using (FileStream streamReader = new FileStream(openFileDialog.FileName, FileMode.Open))
             {
-                //using (JsonTextReader jsonTextReader = new JsonTextReader(streamReader))
+                using (JsonTextReader jsonTextReader = new JsonTextReader(streamReader))
                 {
                     try
                     {
-                        BsonReader reader = new BsonReader(streamReader);
-                        reader.ReadRootValueAsArray = true;                                       
+                        /*BsonReader reader = new BsonReader(streamReader);
+                        reader.ReadRootValueAsArray = true;*/                                       
                         JsonSerializer deserializer = new JsonSerializer();
-                        deserializer.TypeNameHandling = TypeNameHandling.Arrays;
-                        //shapes = (List<Configs>)deserializer.Deserialize(jsonTextReader);
-                        shapes = (deserializer.Deserialize<List<Configs>>(reader));
+                        deserializer.TypeNameHandling = TypeNameHandling.All;
+                        var shapes = new List<Configs>();
+                        shapes = (List<Configs>)deserializer.Deserialize(jsonTextReader);                        
+                        //shapes = (deserializer.Deserialize<List<Configs>>(reader));
                         foreach (Configs shape in shapes)
                         {                            
                             shape.CurrentFigure.Draw(drawArea, new Pen(shape.Color, shape.Width), shape.ShiftPressed);
@@ -215,12 +218,18 @@ namespace Paint
         {
             if (e.Shift)            
                 configs.ShiftPressed = shiftPressed = true;             
-        }
+        }        
 
         private void MainForm_KeyUp(object sender, KeyEventArgs e)
         {
             if (!e.Shift)
                 configs.ShiftPressed = shiftPressed = false;
+        }
+
+        private void Relocate_Click(object sender, EventArgs e)
+        {
+            mooving = true;
+            fabric = null;
         }
     }
 }

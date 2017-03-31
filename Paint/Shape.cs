@@ -6,7 +6,7 @@ namespace Paint
 {        
     [KnownType(typeof(Shape))]
     [DataContract]
-    abstract class Shape: ISelectable
+    abstract class Shape: ISelectable, IEditable
     {
         [DataMember]
         public Point FirstPoint { get; set; }
@@ -43,6 +43,14 @@ namespace Paint
             int length = Math.Abs(SecondPoint.X - FirstPoint.X);
             int height = Math.Abs(SecondPoint.Y - FirstPoint.Y);
             graphics.DrawRectangle(pen, temp.X, temp.Y, length, height);
+        }
+
+        public virtual void Relocate(Point newPoint)
+        {                    
+            int differenceX = newPoint.X - FirstPoint.X;
+            int differenceY = newPoint.Y - FirstPoint.Y;
+            FirstPoint = new Point(FirstPoint.X + differenceX, FirstPoint.Y + differenceY);
+            SecondPoint = new Point(SecondPoint.X + differenceX, SecondPoint.Y + differenceY);        
         }
     }
 }

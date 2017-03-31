@@ -40,6 +40,7 @@
             this.buttonLoad = new System.Windows.Forms.Button();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.Relocate = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -145,12 +146,23 @@
             // 
             this.openFileDialog.FileName = "openFileDialog1";
             // 
+            // Relocate
+            // 
+            this.Relocate.Location = new System.Drawing.Point(479, 9);
+            this.Relocate.Name = "Relocate";
+            this.Relocate.Size = new System.Drawing.Size(93, 31);
+            this.Relocate.TabIndex = 11;
+            this.Relocate.Text = "Relocate shape";
+            this.Relocate.UseVisualStyleBackColor = true;
+            this.Relocate.Click += new System.EventHandler(this.Relocate_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(883, 394);
+            this.Controls.Add(this.Relocate);
             this.Controls.Add(this.buttonLoad);
             this.Controls.Add(this.buttonSave);
             this.Controls.Add(this.labelPenWidth);
@@ -187,6 +199,7 @@
         private System.Windows.Forms.Button buttonLoad;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
+        private System.Windows.Forms.Button Relocate;
     }
 }
 

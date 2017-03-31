@@ -55,6 +55,7 @@
     <Compile Include="CreateOval.cs" />
     <Compile Include="CreateRectangle.cs" />
     <Compile Include="ICreate.cs" />
+    <Compile Include="IEditable.cs" />
     <Compile Include="ISelectable.cs" />
     <Compile Include="Shape.cs" />
     <Compile Include="Lines.cs" />
