@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace Paint
 {
-    class CreateLine : ICreate
+    class CreateLines : ICreate
     {
         public Shape Create()
         {

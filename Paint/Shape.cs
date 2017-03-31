@@ -35,7 +35,7 @@ namespace Paint
 
         public virtual void Select(Graphics graphics)
         {
-            var pen = new Pen(Color.Gray, 2F);
+            var pen = new Pen(Color.Red, 2F);
             pen.DashPattern = new float[] { 4, 3 };
             var temp = new Point();
             temp.X = Math.Min(FirstPoint.X, SecondPoint.X);

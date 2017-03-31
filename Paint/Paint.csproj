@@ -51,9 +51,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configs.cs" />
-    <Compile Include="CreateLine.cs" />
-    <Compile Include="CreateOval.cs" />
-    <Compile Include="CreateRectangle.cs" />
+    <Compile Include="CreateLines.cs" />
+    <Compile Include="CreateOvals.cs" />
+    <Compile Include="CreateRectangles.cs" />
     <Compile Include="ICreate.cs" />
     <Compile Include="IEditable.cs" />
     <Compile Include="ISelectable.cs" />

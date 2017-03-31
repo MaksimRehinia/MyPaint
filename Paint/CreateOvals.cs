@@ -3,11 +3,11 @@ using System.Drawing;
 
 namespace Paint
 {
-    class CreateRectangle : ICreate
+    class CreateOvals : ICreate
     {
         public Shape Create()
         {
-            return new Rectangles();
+            return new Ovals();
         }
     }
 }
