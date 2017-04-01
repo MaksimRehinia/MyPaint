@@ -120,7 +120,7 @@ namespace Paint
                     checkedListBox.ClearSelected();
                 }
                 selectedShape.CurrentFigure.Relocate(new Point(e.X, e.Y));
-                shapeList.Add(selectedShape);
+                shapeList.Add(new Configs(selectedShape));
                 RedrawShapes();                
                 moving = false;
                 selectedShape = null;                
@@ -137,6 +137,8 @@ namespace Paint
                 {
                     configs.CurrentFigure.SecondPoint = new Point(e.X, e.Y);
                     configs.CurrentFigure.Draw(drawArea, pen, shiftPressed);
+                    configs.Color = pen.Color;
+                    configs.Width = pen.Width;
                     btmp_back = (Bitmap)btmp_front.Clone();                    
                     shapeList.Add(new Configs(configs));
                     pictureBox.Refresh();
@@ -168,13 +170,12 @@ namespace Paint
             DialogResult D = colorDialog.ShowDialog();
             if (D == DialogResult.OK)
             {
-                configs.Color = pen.Color = buttonColor.ForeColor = colorDialog.Color;
+                pen.Color = buttonColor.ForeColor = colorDialog.Color;
                 if (selectedShape != null)
                 {
                     shapeList.Remove(selectedShape);
                     selectedShape.Color = pen.Color;                    
-                    shapeList.Add(selectedShape);
-                    CleanField();
+                    shapeList.Add(new Configs(selectedShape));                    
                     RedrawShapes();
                     buttonEdit.Enabled = false;
                     buttonRelocate.Enabled = false;
@@ -194,12 +195,12 @@ namespace Paint
             float width;
             if (float.TryParse((sender as TextBox).Text, out width))
             {
-                configs.Width = pen.Width = width;
+                pen.Width = width;
                 if (selectedShape != null)
                 {
                     shapeList.Remove(selectedShape);                    
                     selectedShape.Width = pen.Width;
-                    shapeList.Add(selectedShape);
+                    shapeList.Add(new Configs(selectedShape));
                     RedrawShapes();
                     buttonEdit.Enabled = false;
                     buttonRelocate.Enabled = false;
@@ -257,9 +258,9 @@ namespace Paint
                         reader.ReadRootValueAsArray = true;*/                                       
                         JsonSerializer deserializer = new JsonSerializer();
                         deserializer.TypeNameHandling = TypeNameHandling.All;
-                        var shapes = new List<Configs>();
-                        shapes = (List<Configs>)deserializer.Deserialize(jsonTextReader);
-                        //shapes = (deserializer.Deserialize<List<Configs>>(reader));
+                        shapeList.Clear();
+                        shapeList = (List<Configs>)deserializer.Deserialize(jsonTextReader);
+                        //shapes = (deserializer.Deserialize<List<Configs>>(reader));                                                
                         RedrawShapes();                       
                     }
                     catch (Exception ex)
@@ -283,8 +284,18 @@ namespace Paint
         }
 
         private void buttonEdit_Click(object sender, EventArgs e)
-        {
-            
+        {            
+            string type = selectedShape.CurrentFigure.GetType().ToString();
+            type = "Paint.Create" + type.Substring(type.LastIndexOf('.') + 1);
+            shapeList.Remove(selectedShape);
+            fabric = (ICreate)Activator.CreateInstance(Type.GetType(type));
+            RedrawShapes();
+            pen = new Pen(selectedShape.Color, selectedShape.Width);
+            selectedShape = null;
+            textBoxPenWidth.Text = pen.Width.ToString();
+            buttonColor.ForeColor = pen.Color;
+            buttonEdit.Enabled = false;
+            buttonRelocate.Enabled = false;
         }
 
         private void buttonRelocate_Click(object sender, EventArgs e)
