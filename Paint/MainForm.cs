@@ -64,18 +64,18 @@ namespace Paint
             switch (checkedListBox.SelectedItem.ToString())
             {
                 case "Line":
-                    {
-                        fabric = new CreateLines();
+                    {                        
+                        fabric = CreateLines.getInstance();
                         break;
                     }
                 case "Oval":
-                    {
-                        fabric = new CreateOvals();
+                    {                        
+                        fabric = CreateOvals.getInstance();
                         break;
                     }
                 case "Rectangle":
                     {
-                        fabric = new CreateRectangles();
+                        fabric = CreateRectangles.getInstance();
                         break;
                     }               
             }            
@@ -87,7 +87,7 @@ namespace Paint
             {
                 if (fabric != null)
                 {
-                    configs.CurrentFigure = fabric.Create();
+                    configs.CurrentFigure = fabric.Create();                    
                     configs.CurrentFigure.FirstPoint = new Point(e.X, e.Y);
                 }
             }            
@@ -284,11 +284,17 @@ namespace Paint
         }
 
         private void buttonEdit_Click(object sender, EventArgs e)
-        {            
+        {
+            if (checkedListBox.SelectedItem != null)
+            {
+                checkedListBox.SetItemChecked(checkedListBox.Items.IndexOf(checkedListBox.SelectedItem), false);
+                checkedListBox.ClearSelected();
+            }
             string type = selectedShape.CurrentFigure.GetType().ToString();
             type = "Paint.Create" + type.Substring(type.LastIndexOf('.') + 1);
             shapeList.Remove(selectedShape);
-            fabric = (ICreate)Activator.CreateInstance(Type.GetType(type));
+            fabric = (ICreate)Activator.CreateInstance(Type.GetType(type));           
+            
             RedrawShapes();
             pen = new Pen(selectedShape.Color, selectedShape.Width);
             selectedShape = null;

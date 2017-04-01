@@ -13,7 +13,7 @@ namespace Paint
         [DataMember]
         public Point SecondPoint { get; set; }        
         
-        public abstract void Draw(Graphics drawArea, Pen P, bool ShiftPressed);
+        public abstract void Draw(Graphics drawArea, Pen P, bool ShiftPressed);        
 
         public virtual bool isInArea(Point point)
         {
