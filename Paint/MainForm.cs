@@ -218,21 +218,16 @@ namespace Paint
         {
             if (saveFileDialog.ShowDialog() == DialogResult.Cancel)
                 return;
-            if (File.Exists(saveFileDialog.FileName))
-            {
+            if (File.Exists(saveFileDialog.FileName))            
                 File.Delete(saveFileDialog.FileName);
-            }            
-            
+
+            JsonSerializer serializer = new JsonSerializer();
+            serializer.TypeNameHandling = TypeNameHandling.All;
             try
-            {
-                using (StreamWriter writer = new StreamWriter(saveFileDialog.FileName))
-                //using (FileStream fs = new FileStream(saveFileDialog.FileName, FileMode.Create))                
+            {                
+                using (FileStream fs = new FileStream(saveFileDialog.FileName, FileMode.Create))                
                 {
-                    //BsonWriter writer = new BsonWriter(fs);
-                    //writer.WriteStartArray();                    
-                    JsonSerializer serializer = new JsonSerializer();
-                    serializer.TypeNameHandling = TypeNameHandling.All;
-                    //writer.WriteEndArray();
+                    BsonWriter writer = new BsonWriter(fs);                                        
                     serializer.Serialize(writer, shapeList);                 
                 }
             }
@@ -245,30 +240,25 @@ namespace Paint
         private void buttonLoad_Click(object sender, EventArgs e)
         {
             if (openFileDialog.ShowDialog() == DialogResult.Cancel)
-                return;                                                            
-                                               
-            using (StreamReader streamReader = new StreamReader(openFileDialog.FileName, Encoding.ASCII))
-            //using (FileStream streamReader = new FileStream(openFileDialog.FileName, FileMode.Open))
+                return;
+
+            JsonSerializer deserializer = new JsonSerializer();
+            deserializer.TypeNameHandling = TypeNameHandling.All;
+            shapeList.Clear();            
+
+            try
             {
-                using (JsonTextReader jsonTextReader = new JsonTextReader(streamReader))
+                using (FileStream streamReader = new FileStream(openFileDialog.FileName, FileMode.Open))
                 {
-                    try
-                    {
-                        /*BsonReader reader = new BsonReader(streamReader);
-                        reader.ReadRootValueAsArray = true;*/                                       
-                        JsonSerializer deserializer = new JsonSerializer();
-                        deserializer.TypeNameHandling = TypeNameHandling.All;
-                        shapeList.Clear();
-                        shapeList = (List<Configs>)deserializer.Deserialize(jsonTextReader);
-                        //shapes = (deserializer.Deserialize<List<Configs>>(reader));                                                
-                        RedrawShapes();                       
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.ToString());
-                    }
-                }
-            }            
+                    BsonReader reader = new BsonReader(streamReader);
+                    shapeList = (List<Configs>)deserializer.Deserialize(reader);
+                }                                                            
+                RedrawShapes();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }                      
         }        
 
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
