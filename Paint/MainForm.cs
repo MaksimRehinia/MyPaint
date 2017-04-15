@@ -13,18 +13,18 @@ namespace Paint
     public partial class MainForm : Form
     {
         internal Graphics drawArea;
-        private ICreate fabric = null;
+        private ICreateable fabric = null;
         private List<Configs> shapeList = new List<Configs>();
-        private Pen pen;                
+        private Pen pen;
         private bool shiftPressed = false;
         private bool moving = false;
         private Bitmap btmp_front, btmp_back;
         private Configs configs;
-        private Configs selectedShape;        
+        private Configs selectedShape;
 
         public MainForm()
         {
-            InitializeComponent();            
+            InitializeComponent();
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -32,17 +32,17 @@ namespace Paint
             buttonRelocate.Enabled = false;
             buttonEdit.Enabled = false;
             configs = new Configs();
-            pen = new Pen(configs.Color, configs.Width);            
+            pen = new Pen(configs.Color, configs.Width);
             CleanField();
-        }        
+        }
 
         private void CleanField()
-        {            
+        {
             btmp_back = new Bitmap(pictureBox.Width, pictureBox.Height);
             btmp_front = new Bitmap(pictureBox.Width, pictureBox.Height);
             drawArea = Graphics.FromImage(btmp_front);
             pictureBox.BackgroundImage = btmp_back;
-            pictureBox.Image = btmp_front;            
+            pictureBox.Image = btmp_front;
         }
 
         private void RedrawShapes()
@@ -64,12 +64,12 @@ namespace Paint
             switch (checkedListBox.SelectedItem.ToString())
             {
                 case "Line":
-                    {                        
+                    {
                         fabric = CreateLines.getInstance();
                         break;
                     }
                 case "Oval":
-                    {                        
+                    {
                         fabric = CreateOvals.getInstance();
                         break;
                     }
@@ -77,9 +77,9 @@ namespace Paint
                     {
                         fabric = CreateRectangles.getInstance();
                         break;
-                    }               
-            }            
-        }              
+                    }
+            }
+        }
 
         private void pictureBox_MouseDown(object sender, MouseEventArgs e)
         {
@@ -87,10 +87,10 @@ namespace Paint
             {
                 if (fabric != null)
                 {
-                    configs.CurrentFigure = fabric.Create();                    
+                    configs.CurrentFigure = fabric.Create();
                     configs.CurrentFigure.FirstPoint = new Point(e.X, e.Y);
                 }
-            }            
+            }
         }
 
         private void pictureBox_MouseMove(object sender, MouseEventArgs e)
@@ -107,12 +107,12 @@ namespace Paint
 
         private void pictureBox_MouseUp(object sender, MouseEventArgs e)
         {
-            drawArea.Clear(Color.Transparent);
+            drawArea.Clear(Color.White);
             drawArea.DrawImage(btmp_back, 0, 0);
             pictureBox.Refresh();
             if (moving)
             {
-                shapeList.Remove(selectedShape);                
+                shapeList.Remove(selectedShape);
                 fabric = null;
                 if (checkedListBox.SelectedItem != null)
                 {
@@ -121,9 +121,9 @@ namespace Paint
                 }
                 selectedShape.CurrentFigure.Relocate(new Point(e.X, e.Y));
                 shapeList.Add(new Configs(selectedShape));
-                RedrawShapes();                
+                RedrawShapes();
                 moving = false;
-                selectedShape = null;                
+                selectedShape = null;
                 buttonRelocate.Enabled = false;
                 buttonEdit.Enabled = false;
                 return;
@@ -139,10 +139,10 @@ namespace Paint
                     configs.CurrentFigure.Draw(drawArea, pen, shiftPressed);
                     configs.Color = pen.Color;
                     configs.Width = pen.Width;
-                    btmp_back = (Bitmap)btmp_front.Clone();                    
+                    btmp_back = (Bitmap)btmp_front.Clone();
                     shapeList.Add(new Configs(configs));
                     pictureBox.Refresh();
-                }                
+                }
             }
             if (e.Button == MouseButtons.Right)
             {
@@ -151,18 +151,18 @@ namespace Paint
                 {
                     if (shapes[i].CurrentFigure is ISelectable && shapes[i].CurrentFigure.isInArea(new Point(e.X, e.Y)))
                     {
-                        shapes[i].CurrentFigure.Select(drawArea);                        
+                        shapes[i].CurrentFigure.Select(drawArea);
                         pictureBox.Refresh();
                         selectedShape = shapes[i];
                         if (selectedShape.CurrentFigure is IEditable)
                         {
                             buttonRelocate.Enabled = true;
-                            buttonEdit.Enabled = true;                            
+                            buttonEdit.Enabled = true;
                         }
                         break;
                     }
                 }
-            }            
+            }
         }
 
         private void buttonColor_Click(object sender, EventArgs e)
@@ -174,21 +174,21 @@ namespace Paint
                 if (selectedShape != null)
                 {
                     shapeList.Remove(selectedShape);
-                    selectedShape.Color = pen.Color;                    
-                    shapeList.Add(new Configs(selectedShape));                    
+                    selectedShape.Color = pen.Color;
+                    shapeList.Add(new Configs(selectedShape));
                     RedrawShapes();
                     buttonEdit.Enabled = false;
                     buttonRelocate.Enabled = false;
                     selectedShape = null;
                 }
-            }            
+            }
         }
 
         private void buttonClean_Click(object sender, EventArgs e)
         {
             shapeList.Clear();
-            CleanField();            
-        }        
+            CleanField();
+        }
 
         private void textBoxPenWidth_TextChanged(object sender, EventArgs e)
         {
@@ -198,7 +198,7 @@ namespace Paint
                 pen.Width = width;
                 if (selectedShape != null)
                 {
-                    shapeList.Remove(selectedShape);                    
+                    shapeList.Remove(selectedShape);
                     selectedShape.Width = pen.Width;
                     shapeList.Add(new Configs(selectedShape));
                     RedrawShapes();
@@ -206,35 +206,35 @@ namespace Paint
                     buttonRelocate.Enabled = false;
                     selectedShape = null;
                 }
-            }                
+            }
             else
             {
                 pen.Width = 2F;
                 (sender as TextBox).Text = "2";
-            }                
+            }
         }
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
             if (saveFileDialog.ShowDialog() == DialogResult.Cancel)
                 return;
-            if (File.Exists(saveFileDialog.FileName))            
+            if (File.Exists(saveFileDialog.FileName))
                 File.Delete(saveFileDialog.FileName);
 
             JsonSerializer serializer = new JsonSerializer();
             serializer.TypeNameHandling = TypeNameHandling.All;
             try
-            {                
-                using (FileStream fs = new FileStream(saveFileDialog.FileName, FileMode.Create))                
+            {
+                using (FileStream fs = new FileStream(saveFileDialog.FileName, FileMode.Create))
                 {
-                    BsonWriter writer = new BsonWriter(fs);                                        
-                    serializer.Serialize(writer, shapeList);                 
+                    BsonWriter writer = new BsonWriter(fs);
+                    serializer.Serialize(writer, shapeList);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
-            }  
+            }
         }
 
         private void buttonLoad_Click(object sender, EventArgs e)
@@ -245,27 +245,31 @@ namespace Paint
             JsonSerializer deserializer = new JsonSerializer();
             deserializer.TypeNameHandling = TypeNameHandling.All;
             shapeList.Clear();            
-
             try
             {
                 using (FileStream streamReader = new FileStream(openFileDialog.FileName, FileMode.Open))
                 {
                     BsonReader reader = new BsonReader(streamReader);
-                    shapeList = (List<Configs>)deserializer.Deserialize(reader);
-                }                                                            
+                    shapeList = (List<Configs>)(deserializer.Deserialize(reader));
+                }
+                if (shapeList == null)
+                {
+                    MessageBox.Show("Error in deserializarion: check the type of the file");
+                    shapeList = new List<Configs>();
+                }                               
                 RedrawShapes();
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
-            }                      
-        }        
+            }
+        }
 
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Shift)            
-                configs.ShiftPressed = shiftPressed = true;             
-        }        
+            if (e.Shift)
+                configs.ShiftPressed = shiftPressed = true;
+        }
 
         private void MainForm_KeyUp(object sender, KeyEventArgs e)
         {
@@ -283,8 +287,8 @@ namespace Paint
             string type = selectedShape.CurrentFigure.GetType().ToString();
             type = "Paint.Create" + type.Substring(type.LastIndexOf('.') + 1);
             shapeList.Remove(selectedShape);
-            fabric = (ICreate)Activator.CreateInstance(Type.GetType(type));           
-            
+            fabric = (ICreateable)Activator.CreateInstance(Type.GetType(type));
+
             RedrawShapes();
             pen = new Pen(selectedShape.Color, selectedShape.Width);
             selectedShape = null;
@@ -298,6 +302,7 @@ namespace Paint
         {
             moving = true;
             fabric = null;
+            buttonEdit.Enabled = false;
         }
     }
 }

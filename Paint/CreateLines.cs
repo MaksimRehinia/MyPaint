@@ -3,12 +3,11 @@ using System.Drawing;
 
 namespace Paint
 {
-    class CreateLines : ICreate
+    class CreateLines : ICreateable
     {
         private static CreateLines instance;
         public Shape Create()
         {                        
-
             return new Lines();
         }
         public static CreateLines getInstance()

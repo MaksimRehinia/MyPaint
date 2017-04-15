@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace Paint
 {
-    class CreateRectangles : ICreate
+    class CreateRectangles : ICreateable
     {
         private static CreateRectangles instance;
         public Shape Create()

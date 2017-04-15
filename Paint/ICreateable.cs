@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Drawing;
 
 namespace Paint
 {
-    interface ICreate
+    interface ICreateable
     {
         Shape Create();
     }

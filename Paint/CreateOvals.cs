@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace Paint
 {
-    class CreateOvals : ICreate
+    class CreateOvals : ICreateable
     {
         private static CreateOvals instance;
         public Shape Create()

@@ -6,7 +6,7 @@ namespace Paint
 {        
     [KnownType(typeof(Shape))]
     [DataContract]
-    abstract class Shape: ISelectable, IEditable
+    abstract class Shape: IEditable, ISelectable
     {
         [DataMember]
         public Point FirstPoint { get; set; }
