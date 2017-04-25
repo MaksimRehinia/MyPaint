@@ -54,7 +54,7 @@
     <Compile Include="CreateLines.cs" />
     <Compile Include="CreateOvals.cs" />
     <Compile Include="CreateRectangles.cs" />
-    <Compile Include="ICreate.cs" />
+    <Compile Include="ICreateable.cs" />
     <Compile Include="IEditable.cs" />
     <Compile Include="ISelectable.cs" />
     <Compile Include="Shape.cs" />

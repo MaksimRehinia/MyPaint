@@ -172,10 +172,8 @@ namespace Paint
             {
                 pen.Color = buttonColor.ForeColor = colorDialog.Color;
                 if (selectedShape != null)
-                {
-                    shapeList.Remove(selectedShape);
-                    selectedShape.Color = pen.Color;
-                    shapeList.Add(new Configs(selectedShape));
+                {                    
+                    selectedShape.Color = pen.Color;                    
                     RedrawShapes();
                     buttonEdit.Enabled = false;
                     buttonRelocate.Enabled = false;
@@ -197,10 +195,8 @@ namespace Paint
             {
                 pen.Width = width;
                 if (selectedShape != null)
-                {
-                    shapeList.Remove(selectedShape);
+                {                   
                     selectedShape.Width = pen.Width;
-                    shapeList.Add(new Configs(selectedShape));
                     RedrawShapes();
                     buttonEdit.Enabled = false;
                     buttonRelocate.Enabled = false;
