@@ -1,19 +1,20 @@
 ﻿using System;
 using System.Drawing;
 using System.Runtime.Serialization;
+using Interfaces;
 
-namespace Paint
-{        
+namespace Shapes
+{
     [KnownType(typeof(Shape))]
     [DataContract]
-    abstract class Shape: IEditable, ISelectable
+    public abstract class Shape: IEditable, ISelectable
     {
         [DataMember]
         public Point FirstPoint { get; set; }
         [DataMember]
-        public Point SecondPoint { get; set; }        
-        
-        public abstract void Draw(Graphics drawArea, Pen P, bool ShiftPressed);        
+        public Point SecondPoint { get; set; }
+
+        public abstract void Draw(Graphics drawArea, Pen P, bool ShiftPressed);
 
         public virtual bool isInArea(Point point)
         {
@@ -46,11 +47,11 @@ namespace Paint
         }
 
         public virtual void Relocate(Point newPoint)
-        {                    
+        {
             int differenceX = newPoint.X - FirstPoint.X;
             int differenceY = newPoint.Y - FirstPoint.Y;
             FirstPoint = new Point(FirstPoint.X + differenceX, FirstPoint.Y + differenceY);
-            SecondPoint = new Point(SecondPoint.X + differenceX, SecondPoint.Y + differenceY);        
+            SecondPoint = new Point(SecondPoint.X + differenceX, SecondPoint.Y + differenceY);
         }
     }
 }

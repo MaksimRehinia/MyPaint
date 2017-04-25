@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Drawing;
 
-namespace Paint
+namespace Interfaces
 {
-    interface IEditable
+    public interface IEditable
     {
         void Relocate(Point newPoint);
     }

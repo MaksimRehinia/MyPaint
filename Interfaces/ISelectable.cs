@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Drawing;
 
-namespace Paint
+namespace Interfaces
 {
-    interface ISelectable
+    public interface ISelectable
     {
         void Select(Graphics graphics);
         bool isInArea(Point point);

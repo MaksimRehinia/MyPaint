@@ -1,30 +1,31 @@
 ﻿using System;
 using System.Drawing;
 using System.Runtime.Serialization;
+using Shapes;
 
-namespace Paint
+namespace Ovals
 {
-    [KnownType(typeof(Ovals))]
+    [KnownType(typeof(Oval))]
     [DataContract]
-    class Ovals: Shape
-    {                       
+    public class Oval: Shape
+    {
         public int Height
         {
             get
-            {                
-                return (SecondPoint.Y - FirstPoint.Y);                
+            {
+                return (SecondPoint.Y - FirstPoint.Y);
             }
         }
         public int Width
         {
             get
-            {              
-                return (SecondPoint.X - FirstPoint.X);                
+            {
+                return (SecondPoint.X - FirstPoint.X);
             }
-        }                
+        }
 
         public override void Draw(Graphics drawArea, Pen P, bool shiftPressed)
-        {                                    
+        {
             if (shiftPressed)
                 drawArea.DrawEllipse(P, FirstPoint.X, FirstPoint.Y, Width, Width);
             else
