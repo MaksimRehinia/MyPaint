@@ -200,7 +200,7 @@ namespace Paint
                 pen.Color = buttonColor.ForeColor = colorDialog.Color;
                 Type realizedInterface = null;
                 if (selectedShape != null)
-                    realizedInterface = selectedShape.CurrentFigure.GetType().GetInterface("Interfaces.IEditable");              
+                    realizedInterface = selectedShape.CurrentFigure.GetType().GetInterface("Interfaces.IEditable");
                 if ( (selectedShape != null) && (realizedInterface != null) )
                 {                    
                     selectedShape.Color = pen.Color;                    
@@ -224,7 +224,10 @@ namespace Paint
             if (float.TryParse((sender as TextBox).Text, out width))
             {
                 pen.Width = width;
+                Type realizedInterface = null;
                 if (selectedShape != null)
+                    realizedInterface = selectedShape.CurrentFigure.GetType().GetInterface("Interfaces.IEditable");
+                if ( (selectedShape != null) && (realizedInterface != null) )                    
                 {                   
                     selectedShape.Width = pen.Width;
                     RedrawShapes();
