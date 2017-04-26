@@ -6,19 +6,21 @@ using System.IO;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
-using System.Text;
+using System.Reflection;
+using Shapes;
 
 namespace Paint
 {
     public partial class MainForm : Form
     {
         internal Graphics drawArea;
-        private ICreateable fabric = null;
+        private CreateShape fabric = null;
         private List<Configs> shapeList = new List<Configs>();
         private Pen pen;
         private bool shiftPressed = false;
         private bool moving = false;
         private Bitmap btmp_front, btmp_back;
+        private string[] libraries;
         private Configs configs;
         private Configs selectedShape;
 
@@ -33,7 +35,36 @@ namespace Paint
             buttonEdit.Enabled = false;
             configs = new Configs();
             pen = new Pen(configs.Color, configs.Width);
+            InitLibraries();
             CleanField();
+        }
+
+        private void InitLibraries()
+        {
+            try
+            {
+                checkedListBox.Items.Clear(); 
+                string path = Application.StartupPath + "\\..\\..\\Libraries";
+                libraries = Directory.GetFiles(path, "*.dll");
+                foreach (var lib in libraries)
+                {
+                    Assembly assembly = Assembly.LoadFile(lib);
+                    Type[] types = assembly.GetTypes();
+                    foreach (Type type in types)
+                    {
+                        if (type.ToString().Contains("Create"))
+                        {
+                            string name = type.ToString().Substring(type.ToString().IndexOf("Create") + 6);                                                       
+                            checkedListBox.Items.Add((object)name, false);                                                        
+                        }
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void CleanField()
@@ -55,7 +86,7 @@ namespace Paint
             btmp_back = (Bitmap)btmp_front.Clone();
         }
 
-        private void checkedListBox1_Click(object sender, EventArgs e)
+        private void checkedListBox_Click(object sender, EventArgs e)
         {
             for (int i = 0; i < checkedListBox.Items.Count; i++)
                 if (checkedListBox.Items[i] != checkedListBox.SelectedItem)
@@ -65,17 +96,17 @@ namespace Paint
             {
                 case "Line":
                     {
-                        fabric = CreateLines.getInstance();
+                       // fabric = CreateLines.getInstance();
                         break;
                     }
                 case "Oval":
                     {
-                        fabric = CreateOvals.getInstance();
+                      //  fabric = CreateOvals.getInstance();
                         break;
                     }
                 case "Rectangle":
                     {
-                        fabric = CreateRectangles.getInstance();
+                      //  fabric = CreateRectangles.getInstance();
                         break;
                     }
             }
@@ -149,7 +180,7 @@ namespace Paint
                 var shapes = new List<Configs>(shapeList);
                 for (int i = shapes.Count - 1; i >= 0; i--)
                 {
-                    if (shapes[i].CurrentFigure is ISelectable && shapes[i].CurrentFigure.isInArea(new Point(e.X, e.Y)))
+                  /*  if (shapes[i].CurrentFigure is ISelectable && shapes[i].CurrentFigure.isInArea(new Point(e.X, e.Y)))
                     {
                         shapes[i].CurrentFigure.Select(drawArea);
                         pictureBox.Refresh();
@@ -160,7 +191,7 @@ namespace Paint
                             buttonEdit.Enabled = true;
                         }
                         break;
-                    }
+                    }*/
                 }
             }
         }
@@ -283,7 +314,7 @@ namespace Paint
             string type = selectedShape.CurrentFigure.GetType().ToString();
             type = "Paint.Create" + type.Substring(type.LastIndexOf('.') + 1);
             shapeList.Remove(selectedShape);
-            fabric = (ICreateable)Activator.CreateInstance(Type.GetType(type));
+          //  fabric = (ICreateable)Activator.CreateInstance(Type.GetType(type));
 
             RedrawShapes();
             pen = new Pen(selectedShape.Color, selectedShape.Width);
@@ -293,6 +324,8 @@ namespace Paint
             buttonEdit.Enabled = false;
             buttonRelocate.Enabled = false;
         }
+
+        
 
         private void buttonRelocate_Click(object sender, EventArgs e)
         {

@@ -48,9 +48,9 @@
             // pictureBox
             // 
             this.pictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox.Location = new System.Drawing.Point(147, 51);
+            this.pictureBox.Location = new System.Drawing.Point(188, 51);
             this.pictureBox.Name = "pictureBox";
-            this.pictureBox.Size = new System.Drawing.Size(724, 337);
+            this.pictureBox.Size = new System.Drawing.Size(683, 337);
             this.pictureBox.TabIndex = 1;
             this.pictureBox.TabStop = false;
             this.pictureBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pictureBox_MouseDown);
@@ -62,16 +62,12 @@
             this.checkedListBox.CheckOnClick = true;
             this.checkedListBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.checkedListBox.FormattingEnabled = true;
-            this.checkedListBox.Items.AddRange(new object[] {
-            "Line",
-            "Oval",
-            "Rectangle"});
             this.checkedListBox.Location = new System.Drawing.Point(1, 51);
             this.checkedListBox.Name = "checkedListBox";
             this.checkedListBox.ScrollAlwaysVisible = true;
-            this.checkedListBox.Size = new System.Drawing.Size(140, 154);
+            this.checkedListBox.Size = new System.Drawing.Size(181, 154);
             this.checkedListBox.TabIndex = 2;
-            this.checkedListBox.Click += new System.EventHandler(this.checkedListBox1_Click);
+            this.checkedListBox.Click += new System.EventHandler(this.checkedListBox_Click);
             // 
             // buttonColor
             // 
