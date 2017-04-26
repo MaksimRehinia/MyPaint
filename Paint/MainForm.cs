@@ -14,15 +14,17 @@ namespace Paint
     public partial class MainForm : Form
     {
         internal Graphics drawArea;
-        private CreateShape fabric = null;
-        private List<Configs> shapeList = new List<Configs>();
+        private CreateShape fabric;
+        private List<Configs> shapeList;
         private Pen pen;
-        private bool shiftPressed = false;
-        private bool moving = false;
+        private bool shiftPressed;
+        private bool moving;
         private Bitmap btmp_front, btmp_back;
         private string[] libraries;
         private Configs configs;
         private Configs selectedShape;
+        private List<string> namesList;
+        private List<Type> factoryTypesList;
 
         public MainForm()
         {
@@ -31,8 +33,14 @@ namespace Paint
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            fabric = null;
+            shiftPressed = false;
+            moving = false;
             buttonRelocate.Enabled = false;
             buttonEdit.Enabled = false;
+            shapeList = new List<Configs>();
+            factoryTypesList = new List<Type>();
+            namesList = new List<string>();
             configs = new Configs();
             pen = new Pen(configs.Color, configs.Width);
             InitLibraries();
@@ -55,7 +63,9 @@ namespace Paint
                         if (type.ToString().Contains("Create"))
                         {
                             string name = type.ToString().Substring(type.ToString().IndexOf("Create") + 6);                                                       
-                            checkedListBox.Items.Add((object)name, false);                                                        
+                            checkedListBox.Items.Add((object)name, false);
+                            factoryTypesList.Add(type);
+                            namesList.Add(name);
                         }
                     }
                 }
@@ -92,24 +102,10 @@ namespace Paint
                 if (checkedListBox.Items[i] != checkedListBox.SelectedItem)
                     checkedListBox.SetItemChecked(checkedListBox.Items.IndexOf(checkedListBox.Items[i]), false);
 
-            switch (checkedListBox.SelectedItem.ToString())
-            {
-                case "Line":
-                    {
-                       // fabric = CreateLines.getInstance();
-                        break;
-                    }
-                case "Oval":
-                    {
-                      //  fabric = CreateOvals.getInstance();
-                        break;
-                    }
-                case "Rectangle":
-                    {
-                      //  fabric = CreateRectangles.getInstance();
-                        break;
-                    }
-            }
+            string nameOfType = checkedListBox.SelectedItem.ToString();
+            Type currentType = factoryTypesList[namesList.IndexOf(nameOfType)];
+            MethodInfo factoryCreater = currentType.GetMethod("getInstance");
+            fabric = (CreateShape)factoryCreater.Invoke(null, new object[] { });
         }
 
         private void pictureBox_MouseDown(object sender, MouseEventArgs e)
@@ -202,7 +198,10 @@ namespace Paint
             if (D == DialogResult.OK)
             {
                 pen.Color = buttonColor.ForeColor = colorDialog.Color;
+                Type realizedInterface = null;
                 if (selectedShape != null)
+                    realizedInterface = selectedShape.CurrentFigure.GetType().GetInterface("Interfaces.IEditable");              
+                if ( (selectedShape != null) && (realizedInterface != null) )
                 {                    
                     selectedShape.Color = pen.Color;                    
                     RedrawShapes();

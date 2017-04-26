@@ -2,12 +2,13 @@
 using System.Drawing;
 using System.Runtime.Serialization;
 using Shapes;
+using Interfaces;
 
 namespace Ovals
 {
     [KnownType(typeof(Oval))]
     [DataContract]
-    public class Oval: Shape
+    public class Oval: Shape, IEditable, ISelectable
     {
         public int Height
         {

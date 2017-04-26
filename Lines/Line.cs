@@ -2,12 +2,13 @@
 using System.Drawing;
 using System.Runtime.Serialization;
 using Shapes;
+using Interfaces;
 
 namespace Lines
 {
     [KnownType(typeof(Line))]
     [DataContract]
-    public class Line: Shape
+    public class Line: Shape, IEditable, ISelectable
     {
         public override void Draw(Graphics drawArea, Pen P, bool shiftPressed)
         {

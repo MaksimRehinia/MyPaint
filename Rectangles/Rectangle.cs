@@ -2,12 +2,13 @@
 using System.Drawing;
 using System.Runtime.Serialization;
 using Shapes;
+using Interfaces;
 
 namespace Rectangles
 {
     [KnownType(typeof(Rectangle))]
     [DataContract]
-    public class Rectangle: Shape
+    public class Rectangle: Shape, IEditable, ISelectable
     {
         public int Height
         {
