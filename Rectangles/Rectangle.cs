@@ -8,23 +8,8 @@ namespace Rectangles
 {
     [KnownType(typeof(Rectangle))]
     [DataContract]
-    public class Rectangle: Shape, IEditable, ISelectable
+    public class Rectangle: Shape
     {
-        public int Height
-        {
-            get
-            {
-                return (SecondPoint.Y - FirstPoint.Y);
-            }
-        }
-        public int Width
-        {
-            get
-            {
-                return (SecondPoint.X - FirstPoint.X);
-            }
-        }
-
         public override void Draw(Graphics drawArea, Pen P, bool shiftPressed)
         {
             Point temp1 = new Point(FirstPoint.X, FirstPoint.Y);
@@ -52,6 +37,6 @@ namespace Rectangles
                     drawArea.DrawRectangle(P, SecondPoint.X, SecondPoint.Y, FirstPoint.X - SecondPoint.X, FirstPoint.Y - SecondPoint.Y);
             }
 
-        }
+        }        
     }
 }

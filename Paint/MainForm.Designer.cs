@@ -109,6 +109,7 @@
             this.textBoxPenWidth.TabIndex = 7;
             this.textBoxPenWidth.Text = "2";
             this.textBoxPenWidth.TextChanged += new System.EventHandler(this.textBoxPenWidth_TextChanged);
+            this.textBoxPenWidth.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxPenWidth_KeyDown);
             // 
             // labelPenWidth
             // 

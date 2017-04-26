@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Drawing;
 using System.Runtime.Serialization;
+using Interfaces;
 
 namespace Shapes
 {
     [KnownType(typeof(Shape))]
     [DataContract]
-    public abstract class Shape
+    public abstract class Shape: IEditable, ISelectable
     {
         [DataMember]
         public Point FirstPoint { get; set; }

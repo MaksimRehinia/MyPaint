@@ -8,7 +8,7 @@ namespace Ovals
 {
     [KnownType(typeof(Oval))]
     [DataContract]
-    public class Oval: Shape, IEditable, ISelectable
+    public class Oval: Shape
     {
         public int Height
         {

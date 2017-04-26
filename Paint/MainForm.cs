@@ -22,8 +22,7 @@ namespace Paint
         private Bitmap btmp_front, btmp_back;
         private string[] libraries;
         private Configs configs;
-        private Configs selectedShape;
-        private List<string> namesList;
+        private Configs selectedShape;        
         private List<Type> factoryTypesList;
 
         public MainForm()
@@ -39,8 +38,7 @@ namespace Paint
             buttonRelocate.Enabled = false;
             buttonEdit.Enabled = false;
             shapeList = new List<Configs>();
-            factoryTypesList = new List<Type>();
-            namesList = new List<string>();
+            factoryTypesList = new List<Type>();            
             configs = new Configs();
             pen = new Pen(configs.Color, configs.Width);
             InitLibraries();
@@ -64,8 +62,7 @@ namespace Paint
                         {
                             string name = type.ToString().Substring(type.ToString().IndexOf("Create") + 6);                                                       
                             checkedListBox.Items.Add((object)name, false);
-                            factoryTypesList.Add(type);
-                            namesList.Add(name);
+                            factoryTypesList.Add(type);                            
                         }
                     }
                 }
@@ -103,8 +100,16 @@ namespace Paint
                     checkedListBox.SetItemChecked(checkedListBox.Items.IndexOf(checkedListBox.Items[i]), false);
 
             string nameOfType = checkedListBox.SelectedItem.ToString();
-            Type currentType = factoryTypesList[namesList.IndexOf(nameOfType)];
-            MethodInfo factoryCreater = currentType.GetMethod("getInstance");
+            MethodInfo factoryCreater = null;
+            foreach (Type type in factoryTypesList)
+            {
+                if (type.ToString().Contains(nameOfType))
+                {
+                    factoryCreater = type.GetMethod("getInstance");
+                    break;
+                }
+                    
+            }
             fabric = (CreateShape)factoryCreater.Invoke(null, new object[] { });
         }
 
@@ -175,19 +180,22 @@ namespace Paint
             {
                 var shapes = new List<Configs>(shapeList);
                 for (int i = shapes.Count - 1; i >= 0; i--)
-                {
-                  /*  if (shapes[i].CurrentFigure is ISelectable && shapes[i].CurrentFigure.isInArea(new Point(e.X, e.Y)))
+                {                                                                                                   
+                    Type realizedInterface = shapes[i].CurrentFigure.GetType().GetInterface("ISelectable");
+                    if ( (realizedInterface != null) && (shapes[i].CurrentFigure.isInArea(new Point(e.X, e.Y))) )
                     {
+                        realizedInterface = null;
                         shapes[i].CurrentFigure.Select(drawArea);
                         pictureBox.Refresh();
                         selectedShape = shapes[i];
-                        if (selectedShape.CurrentFigure is IEditable)
+                        realizedInterface = shapes[i].CurrentFigure.GetType().GetInterface("Interfaces.IEditable");
+                        if (realizedInterface != null)
                         {
                             buttonRelocate.Enabled = true;
                             buttonEdit.Enabled = true;
                         }
                         break;
-                    }*/
+                    }
                 }
             }
         }
@@ -221,26 +229,11 @@ namespace Paint
         private void textBoxPenWidth_TextChanged(object sender, EventArgs e)
         {
             float width;
-            if (float.TryParse((sender as TextBox).Text, out width))
-            {
-                pen.Width = width;
-                Type realizedInterface = null;
-                if (selectedShape != null)
-                    realizedInterface = selectedShape.CurrentFigure.GetType().GetInterface("Interfaces.IEditable");
-                if ( (selectedShape != null) && (realizedInterface != null) )                    
-                {                   
-                    selectedShape.Width = pen.Width;
-                    RedrawShapes();
-                    buttonEdit.Enabled = false;
-                    buttonRelocate.Enabled = false;
-                    selectedShape = null;
-                }
-            }
-            else
+            if (!float.TryParse((sender as TextBox).Text, out width))
             {
                 pen.Width = 2F;
                 (sender as TextBox).Text = "2";
-            }
+            }           
         }
 
         private void buttonSave_Click(object sender, EventArgs e)
@@ -313,11 +306,21 @@ namespace Paint
                 checkedListBox.SetItemChecked(checkedListBox.Items.IndexOf(checkedListBox.SelectedItem), false);
                 checkedListBox.ClearSelected();
             }
-            string type = selectedShape.CurrentFigure.GetType().ToString();
-            type = "Paint.Create" + type.Substring(type.LastIndexOf('.') + 1);
-            shapeList.Remove(selectedShape);
-          //  fabric = (ICreateable)Activator.CreateInstance(Type.GetType(type));
+            string nameOfType = selectedShape.CurrentFigure.GetType().ToString();
+            nameOfType = nameOfType.Substring(nameOfType.LastIndexOf('.') + 1);           
+            MethodInfo factoryCreater = null;
+            foreach (Type type in factoryTypesList)
+            {
+                if (type.ToString().Contains(nameOfType))
+                {
+                    factoryCreater = type.GetMethod("getInstance");
+                    break;
+                }
 
+            }            
+            fabric = (CreateShape)factoryCreater.Invoke(null, new object[] { });
+
+            shapeList.Remove(selectedShape);
             RedrawShapes();
             pen = new Pen(selectedShape.Color, selectedShape.Width);
             selectedShape = null;
@@ -327,7 +330,26 @@ namespace Paint
             buttonRelocate.Enabled = false;
         }
 
-        
+        private void textBoxPenWidth_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                float width;
+                float.TryParse((sender as TextBox).Text, out width);
+                pen.Width = width;
+                Type realizedInterface = null;
+                if (selectedShape != null)
+                    realizedInterface = selectedShape.CurrentFigure.GetType().GetInterface("Interfaces.IEditable");
+                if ((selectedShape != null) && (realizedInterface != null))
+                {
+                    selectedShape.Width = pen.Width;
+                    RedrawShapes();
+                    buttonEdit.Enabled = false;
+                    buttonRelocate.Enabled = false;
+                    selectedShape = null;
+                }
+            }
+        }
 
         private void buttonRelocate_Click(object sender, EventArgs e)
         {
