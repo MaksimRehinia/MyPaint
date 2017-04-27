@@ -8,7 +8,7 @@ namespace Rectangles
 {
     [KnownType(typeof(Rectangle))]
     [DataContract]
-    public class Rectangle: Shape
+    public class Rectangle: Shape, IEditable, ISelectable
     {
         public override void Draw(Graphics drawArea, Pen P, bool shiftPressed)
         {

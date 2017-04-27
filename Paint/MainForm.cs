@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Drawing;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -8,6 +9,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
 using System.Reflection;
 using Shapes;
+using Interfaces;
 
 namespace Paint
 {
@@ -24,6 +26,7 @@ namespace Paint
         private Configs configs;
         private Configs selectedShape;        
         private List<Type> factoryTypesList;
+        private List<Assembly> assemblies;
 
         public MainForm()
         {
@@ -38,7 +41,8 @@ namespace Paint
             buttonRelocate.Enabled = false;
             buttonEdit.Enabled = false;
             shapeList = new List<Configs>();
-            factoryTypesList = new List<Type>();            
+            factoryTypesList = new List<Type>();
+            assemblies = new List<Assembly>();
             configs = new Configs();
             pen = new Pen(configs.Color, configs.Width);
             InitLibraries();
@@ -56,6 +60,7 @@ namespace Paint
                 {
                     Assembly assembly = Assembly.LoadFile(lib);
                     Type[] types = assembly.GetTypes();
+                    assemblies.Add(assembly);
                     foreach (Type type in types)
                     {
                         if (type.ToString().Contains("Create"))
@@ -67,7 +72,7 @@ namespace Paint
                     }
                 }
 
-            }
+            }            
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
@@ -180,8 +185,9 @@ namespace Paint
             {
                 var shapes = new List<Configs>(shapeList);
                 for (int i = shapes.Count - 1; i >= 0; i--)
-                {                                                                                                   
-                    Type realizedInterface = shapes[i].CurrentFigure.GetType().GetInterface("ISelectable");
+                {                    
+                    Type realizedInterface = shapes[i].CurrentFigure.GetType().GetInterface("Interfaces.ISelectable");
+                     
                     if ( (realizedInterface != null) && (shapes[i].CurrentFigure.isInArea(new Point(e.X, e.Y))) )
                     {
                         realizedInterface = null;
@@ -243,15 +249,19 @@ namespace Paint
             if (File.Exists(saveFileDialog.FileName))
                 File.Delete(saveFileDialog.FileName);
 
+            selectedShape = null;
+            buttonEdit.Enabled = false;
+            buttonRelocate.Enabled = false;
+
             JsonSerializer serializer = new JsonSerializer();
             serializer.TypeNameHandling = TypeNameHandling.All;
             try
             {
                 using (FileStream fs = new FileStream(saveFileDialog.FileName, FileMode.Create))
                 {
-                    BsonWriter writer = new BsonWriter(fs);
+                    BsonDataWriter writer = new BsonDataWriter(fs);
                     serializer.Serialize(writer, shapeList);
-                }
+                }                
             }
             catch (Exception ex)
             {
@@ -264,23 +274,30 @@ namespace Paint
             if (openFileDialog.ShowDialog() == DialogResult.Cancel)
                 return;
 
+            selectedShape = null;
+            buttonEdit.Enabled = false;
+            buttonRelocate.Enabled = false;   
+                        
             JsonSerializer deserializer = new JsonSerializer();
-            deserializer.TypeNameHandling = TypeNameHandling.All;
-            shapeList.Clear();            
+            deserializer.TypeNameHandling = TypeNameHandling.All;                      
             try
             {
+                var shapes = new List<Configs> ();
                 using (FileStream streamReader = new FileStream(openFileDialog.FileName, FileMode.Open))
                 {
-                    BsonReader reader = new BsonReader(streamReader);
-                    shapeList = (List<Configs>)(deserializer.Deserialize(reader));
+                    BsonDataReader reader = new BsonDataReader(streamReader);
+                    shapes = (List<Configs>)(deserializer.Deserialize(reader));      
                 }
-                if (shapeList == null)
+                if (shapes == null)
                 {
-                    MessageBox.Show("Error in deserializarion: check the type of the file");
-                    shapeList = new List<Configs>();
-                }                               
-                RedrawShapes();
-            }
+                    MessageBox.Show("Error in deserializarion: empty file or file of inproper type");                    
+                }
+                else
+                {
+                    shapeList = new List<Configs>(shapes);
+                    RedrawShapes();
+                }                                           
+            }                       
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());

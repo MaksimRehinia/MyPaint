@@ -7,7 +7,7 @@ namespace Shapes
 {
     [KnownType(typeof(Shape))]
     [DataContract]
-    public abstract class Shape: IEditable, ISelectable
+    public abstract class Shape
     {
         [DataMember]
         public Point FirstPoint { get; set; }
