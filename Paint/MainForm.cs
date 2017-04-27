@@ -25,8 +25,7 @@ namespace Paint
         private string[] libraries;
         private Configs configs;
         private Configs selectedShape;        
-        private List<Type> factoryTypesList;
-        private List<Assembly> assemblies;
+        private List<Type> factoryTypesList;        
 
         public MainForm()
         {
@@ -41,8 +40,7 @@ namespace Paint
             buttonRelocate.Enabled = false;
             buttonEdit.Enabled = false;
             shapeList = new List<Configs>();
-            factoryTypesList = new List<Type>();
-            assemblies = new List<Assembly>();
+            factoryTypesList = new List<Type>();            
             configs = new Configs();
             pen = new Pen(configs.Color, configs.Width);
             InitLibraries();
@@ -58,18 +56,26 @@ namespace Paint
                 libraries = Directory.GetFiles(path, "*.dll");
                 foreach (var lib in libraries)
                 {
-                    Assembly assembly = Assembly.LoadFile(lib);
-                    Type[] types = assembly.GetTypes();
-                    assemblies.Add(assembly);
-                    foreach (Type type in types)
+                    try
                     {
-                        if (type.ToString().Contains("Create"))
+                        Assembly assembly = Assembly.LoadFile(lib);
+                        Type[] types = assembly.GetTypes();
+                        foreach (Type type in types)
                         {
-                            string name = type.ToString().Substring(type.ToString().IndexOf("Create") + 6);                                                       
-                            checkedListBox.Items.Add((object)name, false);
-                            factoryTypesList.Add(type);                            
+                            if (type.ToString().Contains("Create") && type.BaseType.ToString().Equals("Shapes.CreateShape"))
+                            {
+                                string name = type.ToString().Substring(type.ToString().IndexOf("Create") + 6);
+                                checkedListBox.Items.Add((object)name, false);
+                                factoryTypesList.Add(type);
+                                break;
+                            }
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Oops... Library: " + lib.ToString() + " can not be downloaded.\n" +
+                            "Error: " + ex.ToString());
+                    }                    
                 }
 
             }            
