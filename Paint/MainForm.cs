@@ -292,17 +292,21 @@ namespace Paint
                 using (FileStream streamReader = new FileStream(openFileDialog.FileName, FileMode.Open))
                 {
                     BsonDataReader reader = new BsonDataReader(streamReader);
-                    shapes = (List<Configs>)(deserializer.Deserialize(reader));      
+                    try
+                    {
+                        shapes = (List<Configs>)(deserializer.Deserialize(reader));
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Error in deserializarion: some libraries may be absent\n"+
+                            "Error: "+ ex.ToString());                        
+                    }                    
                 }
-                if (shapes == null)
-                {
-                    MessageBox.Show("Error in deserializarion: empty file or file of inproper type");                    
-                }
-                else
+                if (shapes != null && shapes.Count != 0)
                 {
                     shapeList = new List<Configs>(shapes);
                     RedrawShapes();
-                }                                           
+                }                                                       
             }                       
             catch (Exception ex)
             {
