@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ovals", "Ovals\Ovals.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lines", "Lines\Lines.csproj", "{A0B5E415-4B72-4130-8A07-BA24CE0D727B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckSum", "CheckSum\CheckSum.csproj", "{0EBEE653-5051-487C-9E77-F9A47D3619A0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{A0B5E415-4B72-4130-8A07-BA24CE0D727B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0B5E415-4B72-4130-8A07-BA24CE0D727B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0B5E415-4B72-4130-8A07-BA24CE0D727B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EBEE653-5051-487C-9E77-F9A47D3619A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EBEE653-5051-487C-9E77-F9A47D3619A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EBEE653-5051-487C-9E77-F9A47D3619A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EBEE653-5051-487C-9E77-F9A47D3619A0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

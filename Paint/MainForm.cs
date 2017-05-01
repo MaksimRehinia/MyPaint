@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Drawing;
+using System.Linq;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.IO;
@@ -22,13 +23,16 @@ namespace Paint
         private bool shiftPressed;
         private bool moving;
         private Bitmap btmp_front, btmp_back;
-        private string[] libraries;
+        private string[] libraries;        
         private Configs configs;
         private Configs selectedShape;        
-        private List<Type> factoryTypesList;        
+        private List<Type> factoryTypesList;
+        private ICheckable checking = null;
+        private Dictionary<byte, string> assembliesToSign;       
 
         public MainForm()
         {
+            LoadCheckSumPlugin(ref checking);            
             InitializeComponent();
         }
 
@@ -40,11 +44,57 @@ namespace Paint
             buttonRelocate.Enabled = false;
             buttonEdit.Enabled = false;
             shapeList = new List<Configs>();
-            factoryTypesList = new List<Type>();            
+            factoryTypesList = new List<Type>();
+            assembliesToSign = new Dictionary<byte, string>();            
             configs = new Configs();
             pen = new Pen(configs.Color, configs.Width);
             InitLibraries();
             CleanField();
+        }
+
+        private DialogResult PrintWarning(string library)
+        {
+            string message = "Warning! Library: " + library + " is not signed or has inproper sign."+
+                "Do you really want to download this library? (if Yes, it will be signed)";
+            string caption = "Library isn't signed";
+            MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+
+            return MessageBox.Show(message, caption, buttons);
+        }
+
+        private bool Check_Check_Sum(string lib, string licence)
+        {                       
+            byte checksum = checking.Get_checksum(lib);
+            if (!checking.Check_checksum(checksum, licence))
+            {                
+                if (PrintWarning(lib) == DialogResult.Yes)
+                {
+                    assembliesToSign.Add(checksum, licence);
+                    return true;
+                }
+                else
+                    return false;                
+            }
+            else
+            {
+                assembliesToSign.Add(checksum, licence);
+                return true;
+            }
+        }
+
+        private string GetFileLicence(string lib)
+        {
+            string path = Application.StartupPath + "\\..\\..\\Libraries";            
+            int firstindex = lib.LastIndexOf('\\');
+            int lastindex = lib.LastIndexOf('.');
+            string nameoflib = lib.Substring(firstindex + 1, lastindex - firstindex - 1);
+
+            string[] licences = null;
+            licences = Directory.GetFiles(path, nameoflib+"Licence");
+            if (licences != null && licences.Count() != 0)
+                return licences[0];
+            else
+                return path+"\\"+nameoflib+"Licence";
         }
 
         private void InitLibraries()
@@ -53,13 +103,18 @@ namespace Paint
             {
                 checkedListBox.Items.Clear(); 
                 string path = Application.StartupPath + "\\..\\..\\Libraries";
-                libraries = Directory.GetFiles(path, "*.dll");
+                libraries = Directory.GetFiles(path, "*.dll");                
+                
                 foreach (var lib in libraries)
                 {
                     try
                     {
-                        Assembly assembly = Assembly.LoadFile(lib);
-                        Type[] types = assembly.GetTypes();
+                        string nameoflicence = GetFileLicence(lib);
+                        if (!Check_Check_Sum(lib, nameoflicence))
+                            continue;
+                                               
+                        Assembly assembly = Assembly.LoadFrom(lib);                        
+                        Type[] types = assembly.GetTypes();                        
                         foreach (Type type in types)
                         {
                             if (type.ToString().Contains("Create") && type.BaseType.ToString().Equals("Shapes.CreateShape"))
@@ -83,6 +138,29 @@ namespace Paint
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void LoadCheckSumPlugin(ref ICheckable plugin)
+        {            
+            var allPlugins = Directory.GetFiles(Application.StartupPath+"\\..\\..\\Libraries\\CheckSum", "CheckSum.dll");
+
+            string pluginName = allPlugins[0];
+       
+            try
+            {
+                var asm = Assembly.LoadFrom(pluginName);
+                foreach (var type in asm.GetTypes())
+                {
+                    if (type.GetInterfaces().Contains(typeof(ICheckable)))
+                    {
+                        plugin = Activator.CreateInstance(type) as ICheckable;                            
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }            
         }
 
         private void CleanField()
@@ -375,6 +453,15 @@ namespace Paint
                     buttonRelocate.Enabled = false;
                     selectedShape = null;
                 }
+            }
+        }
+
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            factoryTypesList.Clear();            
+            foreach (KeyValuePair<byte, string> licence in assembliesToSign)
+            {
+                checking.Set_checksum(licence.Key, licence.Value);
             }
         }
 
