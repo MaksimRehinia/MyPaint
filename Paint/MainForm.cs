@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Bson;
 using System.Reflection;
 using Shapes;
@@ -337,22 +338,28 @@ namespace Paint
             buttonEdit.Enabled = false;
             buttonRelocate.Enabled = false;
 
-            JsonSerializer serializer = new JsonSerializer();
+            JsonSerializer serializer = new JsonSerializer();            
             serializer.TypeNameHandling = TypeNameHandling.All;
+            
             try
-            {
-                using (FileStream fs = new FileStream(saveFileDialog.FileName, FileMode.Create))
-                {
-                    BsonDataWriter writer = new BsonDataWriter(fs);
-                    serializer.Serialize(writer, shapeList);
-                }                
+            {                
+                using (StreamWriter fs = new StreamWriter(saveFileDialog.FileName))
+                {                                        
+                    JsonTextWriter wr = new JsonTextWriter(fs);                                       
+                    foreach (var shape in shapeList)
+                    {                          
+                        serializer.Serialize(wr, shape);
+                        wr.WriteWhitespace("   ");                                                                                                
+                    }                                        
+                    wr.Close();                    
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString());
             }
         }
-
+        
         private void buttonLoad_Click(object sender, EventArgs e)
         {
             if (openFileDialog.ShowDialog() == DialogResult.Cancel)
@@ -362,34 +369,52 @@ namespace Paint
             buttonEdit.Enabled = false;
             buttonRelocate.Enabled = false;   
                         
-            JsonSerializer deserializer = new JsonSerializer();
-            deserializer.TypeNameHandling = TypeNameHandling.All;                      
+            JsonSerializer deserializer = new JsonSerializer();            
+            deserializer.TypeNameHandling = TypeNameHandling.All;
+            var shapes = new List<Configs>();
+            string[] jsonObjArray = null;
             try
-            {
-                var shapes = new List<Configs> ();
-                using (FileStream streamReader = new FileStream(openFileDialog.FileName, FileMode.Open))
+            {                
+                using (StreamReader fs = new StreamReader(openFileDialog.FileName, Encoding.ASCII))
                 {
-                    BsonDataReader reader = new BsonDataReader(streamReader);
-                    try
-                    {
-                        shapes = (List<Configs>)(deserializer.Deserialize(reader));
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Error in deserializarion: some libraries may be absent\n"+
-                            "Error: "+ ex.ToString());                        
-                    }                    
+                    string json = fs.ReadToEnd();
+                    string[] delimeters = new string[] { "   " };                    
+                    jsonObjArray = json.Split(delimeters, StringSplitOptions.RemoveEmptyEntries);
+                    fs.Close();
                 }
-                if (shapes != null && shapes.Count != 0)
-                {
-                    shapeList = new List<Configs>(shapes);
-                    RedrawShapes();
-                }                                                       
-            }                       
+            }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+                MessageBox.Show("Some problems with deserialization file " +
+                    openFileDialog.FileName + "\nError: " + ex.Message.ToString());
             }
+
+            foreach (var jsonObj in jsonObjArray)
+            {
+                try
+                {
+                    Configs item = null;
+                    JObject obj = JObject.Parse(jsonObj);
+
+                    item = new Configs(obj.ToObject<Configs>(deserializer));
+                    if (item != null)
+                        shapes.Add(item);
+                }
+                catch (JsonException ex)
+                {
+                    MessageBox.Show(ex.InnerException.Message);                    
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message.ToString());                    
+                }
+            }         
+                     
+            if (shapes != null && shapes.Count != 0)
+            {
+                shapeList = new List<Configs>(shapes);
+                RedrawShapes();
+            }                                                                               
         }
 
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
