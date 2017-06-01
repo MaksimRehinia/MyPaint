@@ -42,6 +42,8 @@
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.buttonRelocate = new System.Windows.Forms.Button();
             this.buttonEdit = new System.Windows.Forms.Button();
+            this.buttonBeginCreate = new System.Windows.Forms.Button();
+            this.buttonEndCreate = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -164,12 +166,34 @@
             this.buttonEdit.UseVisualStyleBackColor = true;
             this.buttonEdit.Click += new System.EventHandler(this.buttonEdit_Click);
             // 
+            // buttonBeginCreate
+            // 
+            this.buttonBeginCreate.Location = new System.Drawing.Point(664, 6);
+            this.buttonBeginCreate.Name = "buttonBeginCreate";
+            this.buttonBeginCreate.Size = new System.Drawing.Size(102, 36);
+            this.buttonBeginCreate.TabIndex = 13;
+            this.buttonBeginCreate.Text = "Begin creating shape";
+            this.buttonBeginCreate.UseVisualStyleBackColor = true;
+            this.buttonBeginCreate.Click += new System.EventHandler(this.buttonBeginCreate_Click);
+            // 
+            // buttonEndCreate
+            // 
+            this.buttonEndCreate.Location = new System.Drawing.Point(769, 6);
+            this.buttonEndCreate.Name = "buttonEndCreate";
+            this.buttonEndCreate.Size = new System.Drawing.Size(102, 36);
+            this.buttonEndCreate.TabIndex = 14;
+            this.buttonEndCreate.Text = "End creating shape";
+            this.buttonEndCreate.UseVisualStyleBackColor = true;
+            this.buttonEndCreate.Click += new System.EventHandler(this.buttonEndCreate_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(883, 394);
+            this.Controls.Add(this.buttonEndCreate);
+            this.Controls.Add(this.buttonBeginCreate);
             this.Controls.Add(this.buttonEdit);
             this.Controls.Add(this.buttonRelocate);
             this.Controls.Add(this.buttonLoad);
@@ -211,6 +235,8 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.Button buttonRelocate;
         private System.Windows.Forms.Button buttonEdit;
+        private System.Windows.Forms.Button buttonBeginCreate;
+        private System.Windows.Forms.Button buttonEndCreate;
     }
 }
 

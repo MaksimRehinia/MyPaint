@@ -62,7 +62,7 @@ namespace CheckSum
         public byte Get_checksum(string filename)
         {
             byte[] buffer;
-            int sum = 0;
+            long sum = 0;
 
             try
             {

@@ -5,10 +5,10 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System.IO;
-using System.Runtime.Serialization;
+using Config;
+using ComplexShapes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Bson;
 using System.Reflection;
 using Shapes;
 using Interfaces;
@@ -18,13 +18,15 @@ namespace Paint
     public partial class MainForm : Form
     {
         internal Graphics drawArea;
+        private int CountComplexShapes;        
         private CreateShape fabric;
         private List<Configs> shapeList;
+        private List<Configs> selectedFigures;
         private Pen pen;
         private bool shiftPressed;
         private bool moving;
-        private Bitmap btmp_front, btmp_back;
-        private string[] libraries;        
+        private bool IsBeganCreate;
+        private Bitmap btmp_front, btmp_back;              
         private Configs configs;
         private Configs selectedShape;        
         private List<Type> factoryTypesList;
@@ -42,33 +44,33 @@ namespace Paint
             fabric = null;
             shiftPressed = false;
             moving = false;
+            IsBeganCreate = false;
             buttonRelocate.Enabled = false;
             buttonEdit.Enabled = false;
+            CountComplexShapes = Directory.GetFiles(Application.StartupPath + "\\..\\..\\Libraries", "*.fig").Length;
             shapeList = new List<Configs>();
+            selectedFigures = new List<Configs>();
             factoryTypesList = new List<Type>();
             assembliesToSign = new Dictionary<byte, string>();            
             configs = new Configs();
             pen = new Pen(configs.Color, configs.Width);
             InitLibraries();
             CleanField();
-        }
-
-        private DialogResult PrintWarning(string library)
-        {
-            string message = "Warning! Library: " + library + " is not signed or has inproper sign."+
-                "Do you really want to download this library? (if Yes, it will be signed)";
-            string caption = "Library isn't signed";
-            MessageBoxButtons buttons = MessageBoxButtons.YesNo;
-
-            return MessageBox.Show(message, caption, buttons);
-        }
+        }       
 
         private bool Check_Check_Sum(string lib, string licence)
         {                       
             byte checksum = checking.Get_checksum(lib);
             if (!checking.Check_checksum(checksum, licence))
-            {                
-                if (PrintWarning(lib) == DialogResult.Yes)
+            {
+                string message = "Warning! Library: " + lib + " is not signed or has an inproper sign." +
+                "Do you really want to download this library? (if Yes, it will be signed)";
+                string caption = "Library isn't signed";
+                MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+
+                DialogResult result =  MessageBox.Show(message, caption, buttons);
+
+                if (result == DialogResult.Yes)
                 {
                     assembliesToSign.Add(checksum, licence);
                     return true;
@@ -104,7 +106,7 @@ namespace Paint
             {
                 checkedListBox.Items.Clear(); 
                 string path = Application.StartupPath + "\\..\\..\\Libraries";
-                libraries = Directory.GetFiles(path, "*.dll");                
+                string[] libraries = Directory.GetFiles(path, "*.dll");                
                 
                 foreach (var lib in libraries)
                 {
@@ -129,8 +131,12 @@ namespace Paint
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Oops... Library: " + lib.ToString() + " can not be downloaded.\n" +
-                            "Error: " + ex.ToString());
+                        string message = "Oops... Library: " + lib.ToString() + " can not be downloaded.\n" + "Error: ";
+                        if (ex.InnerException != null)
+                            message += ex.InnerException.Message;
+                        else
+                            message += ex.Message;
+                        MessageBox.Show(message);
                     }                    
                 }
 
@@ -275,20 +281,44 @@ namespace Paint
                      
                     if ( (realizedInterface != null) && (shapes[i].CurrentFigure.isInArea(new Point(e.X, e.Y))) )
                     {
-                        realizedInterface = null;
-                        shapes[i].CurrentFigure.Select(drawArea);
-                        pictureBox.Refresh();
-                        selectedShape = shapes[i];
-                        realizedInterface = shapes[i].CurrentFigure.GetType().GetInterface("Interfaces.IEditable");
-                        if (realizedInterface != null)
+                        if (IsBeganCreate)
                         {
-                            buttonRelocate.Enabled = true;
-                            buttonEdit.Enabled = true;
+                            selectedFigures.Add(shapes[i]);
+                            if (selectedFigures.Count < 2)
+                            {
+                                buttonEndCreate.Enabled = false;
+                            }
+                            else
+                            {
+                                buttonEndCreate.Enabled = true;
+                            }
+                            foreach (var shape in selectedFigures)
+                            {
+                                shape.CurrentFigure.Select(drawArea);
+                            }
+                            pictureBox.Refresh();
                         }
-                        break;
+                        else
+                        {
+                            realizedInterface = null;
+                            shapes[i].CurrentFigure.Select(drawArea);
+                            pictureBox.Refresh();
+                            selectedShape = shapes[i];
+                            realizedInterface = shapes[i].CurrentFigure.GetType().GetInterface("Interfaces.IEditable");
+                            if (realizedInterface != null)
+                            {
+                                buttonRelocate.Enabled = true;
+                                buttonEdit.Enabled = true;
+                            }                            
+                        }
+                        return;
                     }
                 }
             }
+            IsBeganCreate = false;
+            buttonBeginCreate.Enabled = true;
+            buttonEndCreate.Enabled = false;
+            selectedFigures = new List<Configs>();
         }
 
         private void buttonColor_Click(object sender, EventArgs e)
@@ -402,7 +432,10 @@ namespace Paint
                 }
                 catch (JsonException ex)
                 {
-                    MessageBox.Show(ex.InnerException.Message);                    
+                    if (ex.InnerException != null)
+                        MessageBox.Show(ex.InnerException.Message);
+                    else
+                        MessageBox.Show("Check the content of the file\n"+ex.Message);
                 }
                 catch(Exception ex)
                 {
@@ -437,19 +470,28 @@ namespace Paint
                 checkedListBox.ClearSelected();
             }
             string nameOfType = selectedShape.CurrentFigure.GetType().ToString();
-            nameOfType = nameOfType.Substring(nameOfType.LastIndexOf('.') + 1);           
-            MethodInfo factoryCreater = null;
-            foreach (Type type in factoryTypesList)
+            if (nameOfType.Contains("ComplexShape"))
             {
-                if (type.ToString().Contains(nameOfType))
+                ComplexShape complexShape = (ComplexShape)selectedShape.CurrentFigure;
+                CreateComplexShape factory = new CreateComplexShape(complexShape.Shapes, complexShape.InitWidth, complexShape.InitHeight);
+                fabric = factory;
+            }
+            else
+            {
+                nameOfType = nameOfType.Substring(nameOfType.LastIndexOf('.') + 1);
+                MethodInfo factoryCreator = null;
+                foreach (Type type in factoryTypesList)
                 {
-                    factoryCreater = type.GetMethod("getInstance");
-                    break;
+                    if (type.ToString().Contains(nameOfType))
+                    {
+                        factoryCreator = type.GetMethod("getInstance");
+                        break;
+                    }
+
                 }
-
-            }            
-            fabric = (CreateShape)factoryCreater.Invoke(null, new object[] { });
-
+                fabric = (CreateShape)factoryCreator.Invoke(null, new object[] { });
+            }
+            
             shapeList.Remove(selectedShape);
             RedrawShapes();
             pen = new Pen(selectedShape.Color, selectedShape.Width);
@@ -487,6 +529,81 @@ namespace Paint
             foreach (KeyValuePair<byte, string> licence in assembliesToSign)
             {
                 checking.Set_checksum(licence.Key, licence.Value);
+            }
+        }
+
+        private void buttonBeginCreate_Click(object sender, EventArgs e)
+        {
+            IsBeganCreate = true;
+            buttonBeginCreate.Enabled = false;
+        }
+
+        private void buttonEndCreate_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                CountComplexShapes++;
+                string fileName = Application.StartupPath + "\\..\\..\\Libraries\\" + "Figure" + CountComplexShapes + ".fig";
+                if (File.Exists(fileName))
+                {
+                    File.Delete(fileName);
+                }
+
+                int minX = 10000;
+                int minY = 10000;
+                int maxX = 0;
+                int maxY = 0;
+
+                foreach (var shape in selectedFigures)
+                {
+                    if (shape.CurrentFigure.GetMaxX() > maxX)
+                    {
+                        maxX = shape.CurrentFigure.GetMaxX();
+                    }
+                    if (shape.CurrentFigure.GetMaxY() > maxY)
+                    {
+                        maxY = shape.CurrentFigure.GetMaxY();
+                    }
+                    if (shape.CurrentFigure.GetMinX() < minX)
+                    {
+                        minX = shape.CurrentFigure.GetMinX();
+                    }
+                    if (shape.CurrentFigure.GetMinY() < minY)
+                    {
+                        minY = shape.CurrentFigure.GetMinY();
+                    }
+                }
+                int initWidth = maxX - minX;
+                int initHeight = maxY - minY;
+                var simpleFigures = new List<ShapeWithDelta>();
+
+                foreach (Configs shape in selectedFigures)
+                {
+                    ShapeWithDelta simpleFigure;
+                                        
+                    simpleFigure = new ShapeWithDelta(
+                        shape.CurrentFigure.GetMinX() - minX,
+                        shape.CurrentFigure.GetMinY() - minY,
+                        shape.CurrentFigure.GetMaxX() - shape.CurrentFigure.GetMinX(),
+                        shape.CurrentFigure.GetMaxY() - shape.CurrentFigure.GetMinY(),
+                        shape
+                    );
+                    simpleFigures.Add(simpleFigure);                   
+                }
+
+                ComplexShape complexFigure = new ComplexShape(simpleFigures, initWidth, initHeight);
+
+                using (StreamWriter streamWriter = new StreamWriter(fileName))
+                {
+                    JsonSerializer ser = new JsonSerializer();
+                    ser.TypeNameHandling = TypeNameHandling.All;
+                    ser.Serialize(streamWriter, complexFigure);
+                    MessageBox.Show("Complex shape is successfully created. Restart the app to use it");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error\n\r"+ex.InnerException != null ? ex.InnerException.ToString() : ex.ToString());
             }
         }
 

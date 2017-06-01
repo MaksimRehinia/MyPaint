@@ -17,6 +17,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lines", "Lines\Lines.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CheckSum", "CheckSum\CheckSum.csproj", "{0EBEE653-5051-487C-9E77-F9A47D3619A0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComplexShapes", "ComplexShapes\ComplexShapes.csproj", "{F929F779-1956-486E-8AC1-44BE872AFCE4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Config", "Config\Config.csproj", "{2600E016-6A7C-4A9C-A134-448E7F610F67}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +55,14 @@ Global
 		{0EBEE653-5051-487C-9E77-F9A47D3619A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0EBEE653-5051-487C-9E77-F9A47D3619A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0EBEE653-5051-487C-9E77-F9A47D3619A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F929F779-1956-486E-8AC1-44BE872AFCE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F929F779-1956-486E-8AC1-44BE872AFCE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F929F779-1956-486E-8AC1-44BE872AFCE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F929F779-1956-486E-8AC1-44BE872AFCE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2600E016-6A7C-4A9C-A134-448E7F610F67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2600E016-6A7C-4A9C-A134-448E7F610F67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2600E016-6A7C-4A9C-A134-448E7F610F67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2600E016-6A7C-4A9C-A134-448E7F610F67}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

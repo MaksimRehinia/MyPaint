@@ -3,10 +3,10 @@ using System.Drawing;
 using System.Runtime.Serialization;
 using Shapes;
 
-namespace Paint
-{    
+namespace Config
+{
     [DataContract]
-    class Configs
+    public class Configs
     {
         [DataMember]
         public Color Color { get; set; }
@@ -21,7 +21,7 @@ namespace Paint
         {
             Color = Color.Black;
             Width = 2;
-            ShiftPressed = false;                
+            ShiftPressed = false;
             CurrentFigure = null;
         }
         public Configs(Configs conf)

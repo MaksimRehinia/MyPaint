@@ -52,5 +52,25 @@ namespace Shapes
             FirstPoint = new Point(FirstPoint.X + differenceX, FirstPoint.Y + differenceY);
             SecondPoint = new Point(SecondPoint.X + differenceX, SecondPoint.Y + differenceY);
         }
+
+        public virtual int GetMaxX()
+        {
+            return Math.Max(FirstPoint.X, SecondPoint.X);
+        }
+
+        public virtual int GetMinX()
+        {
+            return Math.Min(FirstPoint.X, SecondPoint.X);
+        }
+
+        public virtual int GetMinY()
+        {
+            return Math.Min(FirstPoint.Y, SecondPoint.Y);
+        }
+
+        public virtual int GetMaxY()
+        {
+            return Math.Max(FirstPoint.Y, SecondPoint.Y);
+        }
     }
 }

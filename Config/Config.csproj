@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F929F779-1956-486E-8AC1-44BE872AFCE4}</ProjectGuid>
+    <ProjectGuid>{2600E016-6A7C-4A9C-A134-448E7F610F67}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ComplexShapes</RootNamespace>
-    <AssemblyName>ComplexShapes</AssemblyName>
+    <RootNamespace>Config</RootNamespace>
+    <AssemblyName>Config</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -42,16 +42,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ComplexShape.cs" />
-    <Compile Include="CreateComplexShape.cs" />
-    <Compile Include="ShapeWithDelta.cs" />
+    <Compile Include="Configs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Config\Config.csproj">
-      <Project>{2600e016-6a7c-4a9c-a134-448e7f610f67}</Project>
-      <Name>Config</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Shapes\Shapes.csproj">
       <Project>{c51f9a9d-cede-4a74-8f8c-b0b9809d6fa7}</Project>
       <Name>Shapes</Name>
