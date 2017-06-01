@@ -685,14 +685,27 @@ namespace Paint
                 foreach (Configs shape in selectedFigures)
                 {
                     ShapeWithDelta simpleFigure;
-                                        
-                    simpleFigure = new ShapeWithDelta(
-                        shape.CurrentFigure.GetMinX() - minX,
-                        shape.CurrentFigure.GetMinY() - minY,
-                        shape.CurrentFigure.GetMaxX() - shape.CurrentFigure.GetMinX(),
-                        shape.CurrentFigure.GetMaxY() - shape.CurrentFigure.GetMinY(),
-                        shape
-                    );
+
+                    if (shape.CurrentFigure.GetType().ToString() == "Lines.Line")
+                    {
+                        simpleFigure = new ShapeWithDelta(
+                            shape.CurrentFigure.FirstPoint.X - minX,
+                            shape.CurrentFigure.FirstPoint.Y - minY,
+                            shape.CurrentFigure.SecondPoint.X - shape.CurrentFigure.FirstPoint.X,
+                            shape.CurrentFigure.SecondPoint.Y - shape.CurrentFigure.FirstPoint.Y,
+                            shape
+                        );                        
+                    }
+                    else
+                    {
+                        simpleFigure = new ShapeWithDelta(
+                            shape.CurrentFigure.GetMinX() - minX,
+                            shape.CurrentFigure.GetMinY() - minY,
+                            shape.CurrentFigure.GetMaxX() - shape.CurrentFigure.GetMinX(),
+                            shape.CurrentFigure.GetMaxY() - shape.CurrentFigure.GetMinY(),
+                            shape
+                        );
+                    }                    
                     simpleFigures.Add(simpleFigure);                   
                 }
 

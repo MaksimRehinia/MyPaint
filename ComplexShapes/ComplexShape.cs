@@ -54,15 +54,14 @@ namespace ComplexShapes
             }
 
             foreach (ShapeWithDelta shape in Shapes)
-            {
+            {                
                 int tempInitX = initX + shape.DeltaX * Math.Abs(SecondPoint.X - FirstPoint.X) / InitWidth;
                 int tempInitY = initY + shape.DeltaY * Math.Abs(SecondPoint.Y - FirstPoint.Y) / InitHeight;
                 shape.Config.CurrentFigure.FirstPoint = new Point(tempInitX, tempInitY);
 
                 int tempFinX = tempInitX + Math.Abs(SecondPoint.X - FirstPoint.X) * shape.Width / InitWidth;
                 int tempFinY = tempInitY + Math.Abs(SecondPoint.Y - FirstPoint.Y) * shape.Height / InitHeight;
-                shape.Config.CurrentFigure.SecondPoint = new Point(tempFinX, tempFinY);
-
+                shape.Config.CurrentFigure.SecondPoint = new Point(tempFinX, tempFinY);                
                 shape.Config.CurrentFigure.Draw(graphics, pen, shiftPressed);
             }
         }
