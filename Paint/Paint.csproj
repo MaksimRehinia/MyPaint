@@ -86,6 +86,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ComplexShapes\ComplexShapes.csproj">
+      <Project>{f929f779-1956-486e-8ac1-44be872afce4}</Project>
+      <Name>ComplexShapes</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Config\Config.csproj">
       <Project>{2600e016-6a7c-4a9c-a134-448e7f610f67}</Project>
       <Name>Config</Name>

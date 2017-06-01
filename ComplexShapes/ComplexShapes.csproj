@@ -52,6 +52,10 @@
       <Project>{2600e016-6a7c-4a9c-a134-448e7f610f67}</Project>
       <Name>Config</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Interfaces\Interfaces.csproj">
+      <Project>{8c35b745-69c2-4c2e-b291-1e07fab1c427}</Project>
+      <Name>Interfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Shapes\Shapes.csproj">
       <Project>{c51f9a9d-cede-4a74-8f8c-b0b9809d6fa7}</Project>
       <Name>Shapes</Name>

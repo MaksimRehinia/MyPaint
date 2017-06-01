@@ -1,14 +1,16 @@
 ﻿using System;
-using Shapes;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Drawing;
+
+using Shapes;
+using Interfaces;
 
 namespace ComplexShapes
 {
     [KnownType(typeof(ComplexShape))]
     [DataContract]
-    public class ComplexShape : Shape
+    public class ComplexShape : Shape, ISelectable, IEditable
     {
         [DataMember]
         public List<ShapeWithDelta> Shapes { get; set; }

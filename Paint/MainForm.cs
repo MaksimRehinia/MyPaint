@@ -10,6 +10,8 @@ using ComplexShapes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Reflection;
+using System.Xml.Serialization;
+
 using Shapes;
 using Interfaces;
 
@@ -22,6 +24,7 @@ namespace Paint
         private CreateShape fabric;
         private List<Configs> shapeList;
         private List<Configs> selectedFigures;
+        private List<ComplexShape> complexShapes;
         private Pen pen;
         private bool shiftPressed;
         private bool moving;
@@ -36,7 +39,7 @@ namespace Paint
         public MainForm()
         {
             LoadCheckSumPlugin(ref checking);            
-            InitializeComponent();
+            InitializeComponent();            
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -50,6 +53,7 @@ namespace Paint
             CountComplexShapes = Directory.GetFiles(Application.StartupPath + "\\..\\..\\Libraries", "*.fig").Length;
             shapeList = new List<Configs>();
             selectedFigures = new List<Configs>();
+            complexShapes = new List<ComplexShape>();
             factoryTypesList = new List<Type>();
             assembliesToSign = new Dictionary<byte, string>();            
             configs = new Configs();
@@ -123,7 +127,7 @@ namespace Paint
                             if (type.ToString().Contains("Create") && type.BaseType.ToString().Equals("Shapes.CreateShape"))
                             {
                                 string name = type.ToString().Substring(type.ToString().IndexOf("Create") + 6);
-                                checkedListBox.Items.Add((object)name, false);
+                                checkedListBox.Items.Add((object)name, false);                                
                                 factoryTypesList.Add(type);
                                 break;
                             }
@@ -140,6 +144,41 @@ namespace Paint
                     }                    
                 }
 
+                checkedListBoxComplex.Items.Clear();
+                int indexOfFigure = 0;
+                JsonSerializer ser = new JsonSerializer();
+                ser.TypeNameHandling = TypeNameHandling.All;
+                foreach (string complexFigure in Directory.GetFiles(path, "*.fig"))
+                {                                        
+                    ComplexShape shape;
+                    using (StreamReader streamReader = new StreamReader(complexFigure, Encoding.ASCII))
+                    {
+                        using (JsonTextReader jsonTextReader = new JsonTextReader(streamReader))
+                        {
+                            try
+                            {                                    
+                                shape = (ComplexShape)ser.Deserialize(jsonTextReader);
+                                complexShapes.Add(shape);
+                                string name = "Figure" + (indexOfFigure + 1);
+                                checkedListBoxComplex.Items.Add((object)name, false);                                    
+                                streamReader.Close();
+                            }
+                            catch (InvalidCastException ice)
+                            {
+                                MessageBox.Show("Ошибка JSON"+ ice.Message);                                    
+                            }
+                            catch (Newtonsoft.Json.JsonSerializationException ex)
+                            {
+                                MessageBox.Show(ex.InnerException != null ? ex.InnerException.Message : ex.Message);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show("Ошибка: "+ex.InnerException != null ? ex.InnerException.Message : ex.Message);                                    
+                            }                                
+                        }
+                    }                    
+                    indexOfFigure++;
+                }
             }            
             catch (Exception ex)
             {
@@ -191,6 +230,12 @@ namespace Paint
 
         private void checkedListBox_Click(object sender, EventArgs e)
         {
+            if (checkedListBoxComplex.SelectedItem != null)
+            {
+                checkedListBoxComplex.SetItemChecked(checkedListBoxComplex.Items.IndexOf(checkedListBoxComplex.SelectedItem), false);
+                checkedListBoxComplex.ClearSelected();
+            }
+
             for (int i = 0; i < checkedListBox.Items.Count; i++)
                 if (checkedListBox.Items[i] != checkedListBox.SelectedItem)
                     checkedListBox.SetItemChecked(checkedListBox.Items.IndexOf(checkedListBox.Items[i]), false);
@@ -207,6 +252,24 @@ namespace Paint
                     
             }
             fabric = (CreateShape)factoryCreater.Invoke(null, new object[] { });
+        }
+
+        private void checkedListBoxComplex_Click(object sender, EventArgs e)
+        {
+            if (checkedListBox.SelectedItem != null)
+            {
+                checkedListBox.SetItemChecked(checkedListBox.Items.IndexOf(checkedListBox.SelectedItem), false);
+                checkedListBox.ClearSelected();
+            }
+
+            for (int i = 0; i < checkedListBoxComplex.Items.Count; i++)
+                if (checkedListBoxComplex.Items[i] != checkedListBoxComplex.SelectedItem)
+                    checkedListBoxComplex.SetItemChecked(checkedListBoxComplex.Items.IndexOf(checkedListBoxComplex.Items[i]), false);
+
+            string numberOfFigure = checkedListBoxComplex.SelectedItem.ToString().Substring(6);
+            ComplexShape complexShape = complexShapes[Convert.ToInt32(numberOfFigure) - 1];
+            CreateComplexShape factory = new CreateComplexShape(complexShape.Shapes, complexShape.InitWidth, complexShape.InitHeight);
+            fabric = factory;            
         }
 
         private void pictureBox_MouseDown(object sender, MouseEventArgs e)
@@ -246,6 +309,11 @@ namespace Paint
                 {
                     checkedListBox.SetItemChecked(checkedListBox.Items.IndexOf(checkedListBox.SelectedItem), false);
                     checkedListBox.ClearSelected();
+                }
+                if (checkedListBoxComplex.SelectedItem != null)
+                {
+                    checkedListBoxComplex.SetItemChecked(checkedListBoxComplex.Items.IndexOf(checkedListBoxComplex.SelectedItem), false);
+                    checkedListBoxComplex.ClearSelected();
                 }
                 selectedShape.CurrentFigure.Relocate(new Point(e.X, e.Y));
                 shapeList.Add(new Configs(selectedShape));
@@ -469,6 +537,11 @@ namespace Paint
                 checkedListBox.SetItemChecked(checkedListBox.Items.IndexOf(checkedListBox.SelectedItem), false);
                 checkedListBox.ClearSelected();
             }
+            if (checkedListBoxComplex.SelectedItem != null)
+            {
+                checkedListBoxComplex.SetItemChecked(checkedListBoxComplex.Items.IndexOf(checkedListBoxComplex.SelectedItem), false);
+                checkedListBoxComplex.ClearSelected();
+            }
             string nameOfType = selectedShape.CurrentFigure.GetType().ToString();
             if (nameOfType.Contains("ComplexShape"))
             {
@@ -606,7 +679,7 @@ namespace Paint
                 MessageBox.Show("Error\n\r"+ex.InnerException != null ? ex.InnerException.ToString() : ex.ToString());
             }
         }
-
+        
         private void buttonRelocate_Click(object sender, EventArgs e)
         {
             moving = true;

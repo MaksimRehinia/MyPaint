@@ -32,7 +32,6 @@
             this.checkedListBox = new System.Windows.Forms.CheckedListBox();
             this.buttonColor = new System.Windows.Forms.Button();
             this.colorDialog = new System.Windows.Forms.ColorDialog();
-            this.textBoxNote = new System.Windows.Forms.TextBox();
             this.buttonClean = new System.Windows.Forms.Button();
             this.textBoxPenWidth = new System.Windows.Forms.TextBox();
             this.labelPenWidth = new System.Windows.Forms.Label();
@@ -44,6 +43,7 @@
             this.buttonEdit = new System.Windows.Forms.Button();
             this.buttonBeginCreate = new System.Windows.Forms.Button();
             this.buttonEndCreate = new System.Windows.Forms.Button();
+            this.checkedListBoxComplex = new System.Windows.Forms.CheckedListBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -81,16 +81,6 @@
             this.buttonColor.Text = "Change color";
             this.buttonColor.UseVisualStyleBackColor = true;
             this.buttonColor.Click += new System.EventHandler(this.buttonColor_Click);
-            // 
-            // textBoxNote
-            // 
-            this.textBoxNote.Location = new System.Drawing.Point(1, 220);
-            this.textBoxNote.Multiline = true;
-            this.textBoxNote.Name = "textBoxNote";
-            this.textBoxNote.ReadOnly = true;
-            this.textBoxNote.Size = new System.Drawing.Size(118, 60);
-            this.textBoxNote.TabIndex = 5;
-            this.textBoxNote.Text = "Note: Press \"Letf Shift\"\r\n while drawing to\r\n create circle, square.";
             // 
             // buttonClean
             // 
@@ -186,12 +176,25 @@
             this.buttonEndCreate.UseVisualStyleBackColor = true;
             this.buttonEndCreate.Click += new System.EventHandler(this.buttonEndCreate_Click);
             // 
+            // checkedListBoxComplex
+            // 
+            this.checkedListBoxComplex.CheckOnClick = true;
+            this.checkedListBoxComplex.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.checkedListBoxComplex.FormattingEnabled = true;
+            this.checkedListBoxComplex.Location = new System.Drawing.Point(1, 228);
+            this.checkedListBoxComplex.Name = "checkedListBoxComplex";
+            this.checkedListBoxComplex.ScrollAlwaysVisible = true;
+            this.checkedListBoxComplex.Size = new System.Drawing.Size(181, 154);
+            this.checkedListBoxComplex.TabIndex = 15;
+            this.checkedListBoxComplex.Click += new System.EventHandler(this.checkedListBoxComplex_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(883, 394);
+            this.Controls.Add(this.checkedListBoxComplex);
             this.Controls.Add(this.buttonEndCreate);
             this.Controls.Add(this.buttonBeginCreate);
             this.Controls.Add(this.buttonEdit);
@@ -201,7 +204,6 @@
             this.Controls.Add(this.labelPenWidth);
             this.Controls.Add(this.textBoxPenWidth);
             this.Controls.Add(this.buttonClean);
-            this.Controls.Add(this.textBoxNote);
             this.Controls.Add(this.buttonColor);
             this.Controls.Add(this.checkedListBox);
             this.Controls.Add(this.pictureBox);
@@ -225,7 +227,6 @@
         private System.Windows.Forms.CheckedListBox checkedListBox;
         private System.Windows.Forms.Button buttonColor;
         private System.Windows.Forms.ColorDialog colorDialog;
-        private System.Windows.Forms.TextBox textBoxNote;
         private System.Windows.Forms.Button buttonClean;
         private System.Windows.Forms.TextBox textBoxPenWidth;
         private System.Windows.Forms.Label labelPenWidth;
@@ -237,6 +238,7 @@
         private System.Windows.Forms.Button buttonEdit;
         private System.Windows.Forms.Button buttonBeginCreate;
         private System.Windows.Forms.Button buttonEndCreate;
+        private System.Windows.Forms.CheckedListBox checkedListBoxComplex;
     }
 }
 
