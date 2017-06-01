@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<AppConfigs xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ClientWidth>900</ClientWidth>
+  <ClientHeight>500</ClientHeight>
+  <ClientOpacity>60</ClientOpacity>
+  <ClientBackground>Red</ClientBackground>
+</AppConfigs>

@@ -44,6 +44,7 @@
             this.buttonBeginCreate = new System.Windows.Forms.Button();
             this.buttonEndCreate = new System.Windows.Forms.Button();
             this.checkedListBoxComplex = new System.Windows.Forms.CheckedListBox();
+            this.buttonConfigs = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -74,7 +75,7 @@
             // buttonColor
             // 
             this.buttonColor.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.buttonColor.Location = new System.Drawing.Point(226, 9);
+            this.buttonColor.Location = new System.Drawing.Point(188, 9);
             this.buttonColor.Name = "buttonColor";
             this.buttonColor.Size = new System.Drawing.Size(78, 31);
             this.buttonColor.TabIndex = 3;
@@ -85,9 +86,9 @@
             // buttonClean
             // 
             this.buttonClean.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.buttonClean.Location = new System.Drawing.Point(147, 9);
+            this.buttonClean.Location = new System.Drawing.Point(116, 9);
             this.buttonClean.Name = "buttonClean";
-            this.buttonClean.Size = new System.Drawing.Size(73, 31);
+            this.buttonClean.Size = new System.Drawing.Size(66, 31);
             this.buttonClean.TabIndex = 6;
             this.buttonClean.Text = "Clean field";
             this.buttonClean.UseVisualStyleBackColor = true;
@@ -114,9 +115,9 @@
             // 
             // buttonSave
             // 
-            this.buttonSave.Location = new System.Drawing.Point(310, 9);
+            this.buttonSave.Location = new System.Drawing.Point(272, 9);
             this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(78, 31);
+            this.buttonSave.Size = new System.Drawing.Size(76, 31);
             this.buttonSave.TabIndex = 9;
             this.buttonSave.Text = "Save picture";
             this.buttonSave.UseVisualStyleBackColor = true;
@@ -124,9 +125,9 @@
             // 
             // buttonLoad
             // 
-            this.buttonLoad.Location = new System.Drawing.Point(394, 9);
+            this.buttonLoad.Location = new System.Drawing.Point(354, 9);
             this.buttonLoad.Name = "buttonLoad";
-            this.buttonLoad.Size = new System.Drawing.Size(78, 31);
+            this.buttonLoad.Size = new System.Drawing.Size(74, 31);
             this.buttonLoad.TabIndex = 10;
             this.buttonLoad.Text = "Load picture";
             this.buttonLoad.UseVisualStyleBackColor = true;
@@ -138,9 +139,9 @@
             // 
             // buttonRelocate
             // 
-            this.buttonRelocate.Location = new System.Drawing.Point(479, 9);
+            this.buttonRelocate.Location = new System.Drawing.Point(434, 9);
             this.buttonRelocate.Name = "buttonRelocate";
-            this.buttonRelocate.Size = new System.Drawing.Size(93, 31);
+            this.buttonRelocate.Size = new System.Drawing.Size(91, 31);
             this.buttonRelocate.TabIndex = 11;
             this.buttonRelocate.Text = "Relocate shape";
             this.buttonRelocate.UseVisualStyleBackColor = true;
@@ -148,9 +149,9 @@
             // 
             // buttonEdit
             // 
-            this.buttonEdit.Location = new System.Drawing.Point(578, 9);
+            this.buttonEdit.Location = new System.Drawing.Point(531, 9);
             this.buttonEdit.Name = "buttonEdit";
-            this.buttonEdit.Size = new System.Drawing.Size(80, 31);
+            this.buttonEdit.Size = new System.Drawing.Size(65, 31);
             this.buttonEdit.TabIndex = 12;
             this.buttonEdit.Text = "Edit shape";
             this.buttonEdit.UseVisualStyleBackColor = true;
@@ -158,9 +159,9 @@
             // 
             // buttonBeginCreate
             // 
-            this.buttonBeginCreate.Location = new System.Drawing.Point(664, 6);
+            this.buttonBeginCreate.Location = new System.Drawing.Point(602, 6);
             this.buttonBeginCreate.Name = "buttonBeginCreate";
-            this.buttonBeginCreate.Size = new System.Drawing.Size(102, 36);
+            this.buttonBeginCreate.Size = new System.Drawing.Size(83, 36);
             this.buttonBeginCreate.TabIndex = 13;
             this.buttonBeginCreate.Text = "Begin creating shape";
             this.buttonBeginCreate.UseVisualStyleBackColor = true;
@@ -168,9 +169,9 @@
             // 
             // buttonEndCreate
             // 
-            this.buttonEndCreate.Location = new System.Drawing.Point(769, 6);
+            this.buttonEndCreate.Location = new System.Drawing.Point(691, 6);
             this.buttonEndCreate.Name = "buttonEndCreate";
-            this.buttonEndCreate.Size = new System.Drawing.Size(102, 36);
+            this.buttonEndCreate.Size = new System.Drawing.Size(76, 36);
             this.buttonEndCreate.TabIndex = 14;
             this.buttonEndCreate.Text = "End creating shape";
             this.buttonEndCreate.UseVisualStyleBackColor = true;
@@ -188,12 +189,23 @@
             this.checkedListBoxComplex.TabIndex = 15;
             this.checkedListBoxComplex.Click += new System.EventHandler(this.checkedListBoxComplex_Click);
             // 
+            // buttonConfigs
+            // 
+            this.buttonConfigs.Location = new System.Drawing.Point(773, 9);
+            this.buttonConfigs.Name = "buttonConfigs";
+            this.buttonConfigs.Size = new System.Drawing.Size(98, 31);
+            this.buttonConfigs.TabIndex = 16;
+            this.buttonConfigs.Text = "Set configs";
+            this.buttonConfigs.UseVisualStyleBackColor = true;
+            this.buttonConfigs.Click += new System.EventHandler(this.buttonConfigs_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(883, 394);
+            this.Controls.Add(this.buttonConfigs);
             this.Controls.Add(this.checkedListBoxComplex);
             this.Controls.Add(this.buttonEndCreate);
             this.Controls.Add(this.buttonBeginCreate);
@@ -209,6 +221,7 @@
             this.Controls.Add(this.pictureBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.KeyPreview = true;
+            this.MaximizeBox = false;
             this.Name = "MainForm";
             this.Text = "MyPaint";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
@@ -239,6 +252,7 @@
         private System.Windows.Forms.Button buttonBeginCreate;
         private System.Windows.Forms.Button buttonEndCreate;
         private System.Windows.Forms.CheckedListBox checkedListBoxComplex;
+        private System.Windows.Forms.Button buttonConfigs;
     }
 }
 

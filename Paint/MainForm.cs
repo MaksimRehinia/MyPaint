@@ -60,7 +60,38 @@ namespace Paint
             pen = new Pen(configs.Color, configs.Width);
             InitLibraries();
             CleanField();
-        }       
+            ConfigWindow();
+        }
+
+        private void ConfigWindow()
+        {
+            try
+            {
+                var formatter = new XmlSerializer(typeof(AppConfigs));
+                using (FileStream fs = new FileStream("../../conf/config.xml", FileMode.Open))
+                {
+                    AppConfigs conf = (AppConfigs)formatter.Deserialize(fs);
+                    if (conf.ClientHeight <= 0 || conf.ClientHeight > 740
+                        || conf.ClientWidth <= 0 || conf.ClientWidth > 1366
+                        || conf.ClientOpacity <= 0 || conf.ClientOpacity > 100)
+                    {
+                        throw new Exception();
+                    }
+                    this.Width = conf.ClientWidth;
+                    this.Height = conf.ClientHeight;
+                    this.Opacity = conf.ClientOpacity;
+                    this.BackColor = Color.FromName(conf.ClientBackground);                    
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Ошибка при чтении параметров");
+                this.Width = 899;
+                this.Height = 432;
+                this.Opacity = 100;
+                this.BackColor = Color.White;
+            }
+        }
 
         private bool Check_Check_Sum(string lib, string licence)
         {                       
@@ -211,10 +242,11 @@ namespace Paint
 
         private void CleanField()
         {
-            btmp_back = new Bitmap(pictureBox.Width, pictureBox.Height);
+            btmp_back = new Bitmap(pictureBox.Width, pictureBox.Height);            
             btmp_front = new Bitmap(pictureBox.Width, pictureBox.Height);
             drawArea = Graphics.FromImage(btmp_front);
             pictureBox.BackgroundImage = btmp_back;
+            pictureBox.BackColor = Color.White;
             pictureBox.Image = btmp_front;
         }
 
@@ -679,7 +711,13 @@ namespace Paint
                 MessageBox.Show("Error\n\r"+ex.InnerException != null ? ex.InnerException.ToString() : ex.ToString());
             }
         }
-        
+
+        private void buttonConfigs_Click(object sender, EventArgs e)
+        {
+            var configs = new ConfigsForm();
+            configs.ShowDialog();
+        }
+
         private void buttonRelocate_Click(object sender, EventArgs e)
         {
             moving = true;
